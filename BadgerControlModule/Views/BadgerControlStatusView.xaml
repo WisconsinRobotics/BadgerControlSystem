@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="BadgerControlModule.Views.BadgerControlStatusView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="150" d:DesignWidth="400"
+             Background="White">
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+
+
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+
+        </Grid.RowDefinitions>
+
+        <Label Content="Status" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="0" Grid.Row="0"/>
+        <Label Content="Direct" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="0" Grid.Row="1"/>
+        <Label Content="Remote" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="0" Grid.Row="2"/>
+        <Label Content="AI" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="0" Grid.Row="3"/>
+        <Label Content="Head" HorizontalAlignment="Left"  VerticalAlignment="Top" Grid.Column="2" Grid.Row="1"/>
+        <Label Content="Vel" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="2" Grid.Row="2"/>
+        <Ellipse x:Name="directDot" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="26" Stroke="Black" VerticalAlignment="Top" Width="26"  Grid.Column="1" Grid.Row="1"/>
+        <Ellipse x:Name="remoteDot" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="26" Stroke="Black" VerticalAlignment="Top" Width="26" Grid.Column="1" Grid.Row="2"/>
+        <Ellipse x:Name="aiDot" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="26" Stroke="Black" VerticalAlignment="Top" Width="26" Grid.Column="1" Grid.Row="3"/>
+        <TextBox x:Name="headingBox" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False" Grid.Column="3" Grid.Row="1"/>
+        <TextBox x:Name="velocityBox" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False" Grid.Column="3" Grid.Row="2"/>
+    </Grid>
+</UserControl>

@@ -1,0 +1,40 @@
+﻿<Window xmlns:prism="http://www.codeplex.com/prism"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="BadgerControlSystem.Shell"
+        Title="Badger Control System" MinHeight="700" MinWidth="700">
+    <Grid ShowGridLines="True">
+
+        <!-- Define the two columns of the parent grid -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- This is the left column of the main window -->
+        <Grid Grid.Column="0" ShowGridLines="True">
+            <!-- Define the subrows of the left column. Note the 3rd row is filler and contains nothing -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
+
+            <ItemsControl Name="ConnectionRegion" prism:RegionManager.RegionName="BadgerControlConnectionView" Grid.Row="0"/>
+            <ItemsControl Name="DriveRegion" prism:RegionManager.RegionName="BadgerControlDriveView" Grid.Row="1"/>
+            <ItemsControl Name="VisualRegion" prism:RegionManager.RegionName="BadgerControlVisualView" Grid.Row="2"/>
+        </Grid>
+        
+        <!-- This is the right column of the main window -->
+        <Grid Grid.Column="1" ShowGridLines="True">
+            <!-- Define the subrows of the right column. Note the 3rd row is filler and contains nothing -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="3*"/>
+            </Grid.RowDefinitions>
+
+            <ItemsControl Name="StatusRegion" prism:RegionManager.RegionName="BadgerControlStatusView" Grid.Row="0"/>
+            <ItemsControl Name="LoggerRegion" prism:RegionManager.RegionName="BadgerControlLoggerView" Grid.Row="1"/>
+        </Grid>
+    </Grid>
+</Window>

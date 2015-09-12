@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="BadgerControlModule.Views.BadgerControlDriveView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="300"
+             Background="White">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="4*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <ComboBox x:Name="DriveModeComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" SelectionChanged="ComboBox_SelectionChanged" ToolTip="Select one..." Grid.Row="1" Grid.Column="1"
+                  Text="{Binding DriveMode, Mode=OneWayToSource}">
+            <ComboBoxItem Background="White" Content="Direct"/>
+            <ComboBoxItem Background="White" Content="Remote"/>
+            <ComboBoxItem Background="White" Content="AI"/>
+        </ComboBox>
+        <Button Content="Confirm" 
+                Command="{Binding Confirm}"
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Top" 
+                Width="75" 
+                Grid.Column="1" 
+                Grid.Row="2"/>
+        <Label Content="Drive Mode Selection" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0"/>
+        <Label Content="Mode" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="1"/>
+
+    </Grid>
+</UserControl>
