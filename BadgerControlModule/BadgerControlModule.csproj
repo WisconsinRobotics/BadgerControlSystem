@@ -103,6 +103,9 @@
     <Compile Include="Views\BadgerControlConnectionView.xaml.cs">
       <DependentUpon>BadgerControlConnectionView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\BadgerControlDiscoveryView.xaml.cs">
+      <DependentUpon>BadgerControlDiscoveryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BadgerControlDriveView.xaml.cs">
       <DependentUpon>BadgerControlDriveView.xaml</DependentUpon>
     </Compile>
@@ -115,6 +118,9 @@
     <Compile Include="Views\BadgerControlVisualView.xaml.cs">
       <DependentUpon>BadgerControlVisualView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\BadgerRobotsInformationView.xaml.cs">
+      <DependentUpon>BadgerRobotsInformationView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -122,6 +128,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\BadgerControlConnectionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BadgerControlDiscoveryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -138,6 +148,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\BadgerControlVisualView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BadgerRobotsInformationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
