@@ -20,5 +20,14 @@
         <Label Content="Robots Information" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="119" Grid.Row="0" Grid.Column="0"/>
         <ComboBox HorizontalAlignment="Left" Margin="10,45,0,0" VerticalAlignment="Top" Width="152" Height="23" Grid.Row="0" Grid.Column="0"/>
 
+        <TreeView Margin="10,10,-23,0" Name="TreeView1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="141" Height="80" Grid.Row="0" Grid.Column="1">
+            <TreeViewItem Header="Header">
+                <TreeViewItem Header="Subheader 1">
+                </TreeViewItem>
+                <TreeViewItem Header="Subheader 2">
+                </TreeViewItem>
+            </TreeViewItem>
+
+        </TreeView>
     </Grid>
 </UserControl>

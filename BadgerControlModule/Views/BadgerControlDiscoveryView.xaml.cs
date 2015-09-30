@@ -12,6 +12,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BadgerControlModule.ViewModels;
+using BadgerControlModule.Services;
+using Microsoft.Practices.Prism.Events;
+using Microsoft.Practices.Prism.PubSubEvents;
 
 namespace BadgerControlModule.Views
 {
@@ -20,9 +24,13 @@ namespace BadgerControlModule.Views
     /// </summary>
     public partial class BadgerControlDiscoveryView : UserControl
     {
+        private static BadgerControlDiscoveryViewModel viewModel;
+
         public BadgerControlDiscoveryView()
         {
             InitializeComponent();
+            viewModel = new BadgerControlDiscoveryViewModel(ApplicationService.Instance.EventAggregator);
+            DataContext = viewModel;
         }
     }
 }

@@ -24,8 +24,8 @@
                     </Grid.RowDefinitions>
 
                     <ItemsControl x:Name="ConnectionRegion" prism:RegionManager.RegionName="BadgerControlConnectionView" Grid.Row="0"/>
-                    <ItemsControl x:Name="DriveRegion" prism:RegionManager.RegionName="BadgerControlDriveView" Grid.Row="1"/>
-                    <ItemsControl x:Name="VisualRegion" prism:RegionManager.RegionName="BadgerControlVisualView" Grid.Row="2"/>
+                    <ItemsControl x:Name="RobotsInfoRegion" prism:RegionManager.RegionName="BadgerRobotsInformationView" Grid.Row="1" Grid.Column="0"/>
+                    <ItemsControl x:Name="DiscoveryRegion" prism:RegionManager.RegionName="BadgerControlDiscoveryView" Grid.Row="2" Grid.Column="0"/>
                 </Grid>
 
                 <!-- This is the right column of the main window -->
@@ -42,6 +42,22 @@
 
             </Grid>
         </TabItem>
-        <TabItem Header="Drive"/>
+        <TabItem Header="Drive">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="25*"/>
+                    <ColumnDefinition Width="164*"/>
+                    <ColumnDefinition Width="567*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="3*"/>
+                </Grid.RowDefinitions>
+
+                <ItemsControl x:Name="DriveRegion" prism:RegionManager.RegionName="BadgerControlDriveView" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,567,0.2"/>
+                <ItemsControl x:Name="VisualRegion" prism:RegionManager.RegionName="BadgerControlVisualView" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,119,567,-0.4" Grid.RowSpan="2"/>
+            </Grid>
+        </TabItem>
     </TabControl>
 </Window>
