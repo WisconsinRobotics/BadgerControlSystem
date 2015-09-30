@@ -127,7 +127,7 @@ namespace BadgerControlModule.Services
             {
                 RequestControl requestControl = new RequestControl();
                 requestControl.SetDestination(destinationAddress);
-                requestControl.SetSource(component.GetAddress());
+                requestControl.SetSource(component.JausAddress);
                 Transport.SendMessage(requestControl);
 
                 // update the connection icon for the correct component to orange
@@ -158,7 +158,7 @@ namespace BadgerControlModule.Services
                     Transport.SendMessage(shutdown);
 
                     queryStatus.SetDestination(newAddress);
-                    queryStatus.SetSource(component.GetAddress());
+                    queryStatus.SetSource(component.JausAddress);
                     Transport.SendMessage(queryStatus);
                 }
                 if (componentTwoActive)
@@ -168,7 +168,7 @@ namespace BadgerControlModule.Services
                     Transport.SendMessage(shutdown);
 
                     queryStatus.SetDestination(newAddress);
-                    queryStatus.SetSource(component.GetAddress());
+                    queryStatus.SetSource(component.JausAddress);
                     Transport.SendMessage(queryStatus);
                 }
                 if (componentThreeActive)
@@ -179,20 +179,20 @@ namespace BadgerControlModule.Services
 
                     queryStatus = new QueryStatus();
                     queryStatus.SetDestination(newAddress);
-                    queryStatus.SetSource(component.GetAddress());
+                    queryStatus.SetSource(component.JausAddress);
                     Transport.SendMessage(queryStatus);
                 }
 
                 // force component to boot
                 Resume resume = new Resume();
                 resume.SetDestination(destinationAddress);
-                resume.SetSource(component.GetAddress());
+                resume.SetSource(component.JausAddress);
                 Transport.SendMessage(resume);
 
                 // see if the component is ready
                 queryStatus = new QueryStatus();
                 queryStatus.SetDestination(destinationAddress);
-                queryStatus.SetSource(component.GetAddress());
+                queryStatus.SetSource(component.JausAddress);
                 Transport.SendMessage(queryStatus);  
 
                 return;
@@ -201,7 +201,7 @@ namespace BadgerControlModule.Services
             // send a drive message
             SetLocalVector msg = new SetLocalVector();
             msg.SetDestination(destinationAddress);
-            msg.SetSource(component.GetAddress());
+            msg.SetSource(component.JausAddress);
 
             // convert joystick degrees into radians
             msg.SetHeading(joystickQueryThread.Angle * (Math.PI / 180));
@@ -311,7 +311,7 @@ namespace BadgerControlModule.Services
 
             ReleaseControl releaseControl = new ReleaseControl();
             releaseControl.SetDestination(destinationAddress);
-            releaseControl.SetSource(component.GetAddress());
+            releaseControl.SetSource(component.JausAddress);
             Transport.SendMessage(releaseControl);
         }
 
