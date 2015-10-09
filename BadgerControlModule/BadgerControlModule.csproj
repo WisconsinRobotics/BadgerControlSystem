@@ -32,8 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BadgerJaus">
-      <HintPath>..\BadgerJaus.dll</HintPath>
+    <Reference Include="BadgerJaus, Version=0.1.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BadgerControlSystem\bin\Debug\BadgerJaus.dll</HintPath>
     </Reference>
     <Reference Include="JoystickLibrary">
       <HintPath>..\JoystickLibrary.dll</HintPath>
@@ -158,7 +159,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

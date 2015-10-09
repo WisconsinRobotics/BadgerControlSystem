@@ -8,8 +8,8 @@
              Background="White">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="43*"/>
-            <ColumnDefinition Width="32*"/>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
@@ -17,10 +17,10 @@
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
 
-        <Label Content="Robots Information" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="119" Grid.Row="0" Grid.Column="0"/>
-        <ComboBox HorizontalAlignment="Left" Margin="10,45,0,0" VerticalAlignment="Top" Width="152" Height="23" Grid.Row="0" Grid.Column="0"/>
+        <Label Content="Robot's Information" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="119" Grid.Row="0" Grid.Column="0"/>
+        <ComboBox HorizontalAlignment="Center"  VerticalAlignment="Center" Width="152" Height="23" Grid.Row="0" Grid.Column="0"/>
 
-        <TreeView Margin="10,10,-23,0" Name="TreeView1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="141" Height="80" Grid.Row="0" Grid.Column="1">
+        <TreeView Name="TreeView1" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="0" Width ="120" Grid.Column="1">
             <TreeViewItem Header="Header">
                 <TreeViewItem Header="Subheader 1">
                 </TreeViewItem>
@@ -29,5 +29,6 @@
             </TreeViewItem>
 
         </TreeView>
+        <Grid Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="100" Margin="131,66,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Width="100"/> <!-- put shit into the grids to make everything neat and resizeable -->
     </Grid>
 </UserControl>
