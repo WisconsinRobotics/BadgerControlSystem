@@ -8,7 +8,7 @@ using Microsoft.Practices.Prism.PubSubEvents;
 
 namespace BadgerControlModule.Services
 {
-    class UpdateDriveModeEvent : CompositePresentationEvent<int>
+    class UpdateDriveModeEvent : PubSubEvent<int>
     {
     }
 }

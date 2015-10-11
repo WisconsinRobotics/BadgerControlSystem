@@ -23,7 +23,7 @@ namespace BadgerControlModule.Services
         CONNECTED = 4
     }
 
-    class ConnectionDetailsEvent : CompositePresentationEvent<ConnectionDetails>
+    class ConnectionDetailsEvent : PubSubEvent<ConnectionDetails>
     {
     }
 }

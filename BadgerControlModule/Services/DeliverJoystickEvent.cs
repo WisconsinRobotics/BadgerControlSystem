@@ -9,7 +9,7 @@ using JoystickLibrary;
 
 namespace BadgerControlModule.Services
 {
-    class DeliverJoystickEvent : CompositePresentationEvent<JoystickQueryThread>
+    class DeliverJoystickEvent : PubSubEvent<JoystickQueryThread>
     {
     }
 }

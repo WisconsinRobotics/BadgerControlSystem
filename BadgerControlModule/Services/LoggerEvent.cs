@@ -8,7 +8,7 @@ using Microsoft.Practices.Prism.PubSubEvents;
 
 namespace BadgerControlModule.Services
 {
-    class LoggerEvent : CompositePresentationEvent<String>
+    class LoggerEvent : PubSubEvent<String>
     {
     }
 }
