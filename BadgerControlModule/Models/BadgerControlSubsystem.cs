@@ -62,14 +62,13 @@ namespace BadgerControlModule.Models
                 CurrentDriveComponent = drive;
             });
             #endregion
+        }
 
+        public void InitializeComponents()
+        {
             // start BadgerControlDrive
             guiService = new BadgerControlDrive();
             guiService.Enabled = true;
-
-            // start Management
-            Management controlManagement = new Management();
-            controlManagement.CurrentState = COMPONENT_STATE.STATE_READY;
 
             guiNode = new Node(GUI_ROBOT_NODE_ID);
             guiComponent = new Component(GUI_COMPONENT_ID);
@@ -77,14 +76,8 @@ namespace BadgerControlModule.Models
             // create subsystem-node-component hierarchy
             this.AddNode(guiNode);
             guiNode.AddComponent(guiComponent);
-            guiComponent.AddService(controlManagement);
             guiComponent.AddService(guiService);
-
-            // get transport instance, add subsystem
-            Transport transportService = Transport.GetTransportService();
-            transportService.AddSubsystem(this);
-            Thread transportThread = new Thread(transportService.run);
-            transportThread.Start();
+            guiComponent.ComponentState = ComponentState.STATE_READY;
 
             // start execute loop
             InitializeTimer();
@@ -157,10 +150,10 @@ namespace BadgerControlModule.Models
         {
             // add a new destination address - this will begin the main body of the excecute loop in the main service
             guiService.CurrentDestinationAddress = new JausAddress(currentRemoteSubsystemID, REMOTE_NODE_ID, (int)currentRemoteComponent);
-            String jausAddressHexString = guiService.CurrentDestinationAddress.toHexString();
+            long jausAddressValue = guiService.CurrentDestinationAddress.Value;
 
             // if there was some sort of error with the JAUS address
-            if (jausAddressHexString == null)
+            if (guiService.CurrentDestinationAddress == null)
             {
                 guiService.CurrentDestinationAddress = null;
                 _eventAggregator.GetEvent<LoggerEvent>().Publish("Error: null JausAddress string");
@@ -169,9 +162,9 @@ namespace BadgerControlModule.Models
             // else, we have all the info we need so attempt to connect
             else
             {
-                JausAddressPort port = new JausAddressPort(ip, Subsystem.JAUS_PORT);
+                IPEndPoint ipEndpoint = new IPEndPoint(ip, Subsystem.JAUS_PORT);
                 Transport transportService = Transport.GetTransportService();
-                transportService.AddRemoteAddress(jausAddressHexString, port);
+                transportService.AddRemoteAddress(jausAddressValue, ipEndpoint);
                 _eventAggregator.GetEvent<LoggerEvent>().Publish("Attempting to connect...");
             }
         }

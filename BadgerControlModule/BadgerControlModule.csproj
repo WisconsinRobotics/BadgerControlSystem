@@ -34,7 +34,7 @@
   <ItemGroup>
     <Reference Include="BadgerJaus, Version=0.1.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\BadgerControlSystem\bin\Debug\BadgerJaus.dll</HintPath>
+      <HintPath>..\BadgerJaus.dll</HintPath>
     </Reference>
     <Reference Include="JoystickLibrary">
       <HintPath>..\JoystickLibrary.dll</HintPath>

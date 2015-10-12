@@ -113,10 +113,8 @@ namespace BadgerControlModule.Services
             set { isEnabled = value; }
         }
 
-        protected override void Execute()
+        protected override void Execute(Component component)
         {
-            base.Execute();
-
             LocateJoystick();
 
             if (!isEnabled || destinationAddress == null)
@@ -212,7 +210,7 @@ namespace BadgerControlModule.Services
             Transport.SendMessage(msg);
         }
 
-        public override bool ImplementsAndHandledMessage(BadgerJaus.Messages.Message message)
+        public override bool ImplementsAndHandledMessage(BadgerJaus.Messages.Message message, Component component)
         {
             switch (message.GetCommandCode())
             {
@@ -239,12 +237,12 @@ namespace BadgerControlModule.Services
                     // update the connection icon for the correct component to red or green accordingly
                     if (sourceComponent == 1)
                     {
-                        if (status.GetStatus() == (int)COMPONENT_STATE.STATE_SHUTDOWN)
+                        if (status.GetStatus() == (int)ComponentState.STATE_SHUTDOWN)
                         {
                             componentOneActive = false;
                             connectionDetails.direct = ConnectionOption.DISCONNECTED;
                         }
-                        else if (status.GetStatus() == (int)COMPONENT_STATE.STATE_READY)
+                        else if (status.GetStatus() == (int)ComponentState.STATE_READY)
                         {
                             componentOneActive = true;
                             connectionDetails.direct = ConnectionOption.CONNECTED;
@@ -252,12 +250,12 @@ namespace BadgerControlModule.Services
                     }
                     else if (sourceComponent == 2)
                     {
-                        if (status.GetStatus() == (int)COMPONENT_STATE.STATE_SHUTDOWN)
+                        if (status.GetStatus() == (int)ComponentState.STATE_SHUTDOWN)
                         {
                             componentTwoActive = false;
                             connectionDetails.remote = ConnectionOption.DISCONNECTED;
                         }
-                        else if (status.GetStatus() == (int)COMPONENT_STATE.STATE_READY)
+                        else if (status.GetStatus() == (int)ComponentState.STATE_READY)
                         {
                             componentTwoActive = true;
                             connectionDetails.remote = ConnectionOption.CONNECTED;
@@ -265,12 +263,12 @@ namespace BadgerControlModule.Services
                     }
                     else if (sourceComponent == 3)
                     {
-                        if (status.GetStatus() == (int)COMPONENT_STATE.STATE_SHUTDOWN)
+                        if (status.GetStatus() == (int)ComponentState.STATE_SHUTDOWN)
                         {
                             componentThreeActive = false;
                             connectionDetails.ai = ConnectionOption.DISCONNECTED;
                         }
-                        else if (status.GetStatus() == (int)COMPONENT_STATE.STATE_READY)
+                        else if (status.GetStatus() == (int)ComponentState.STATE_READY)
                         {
                             componentThreeActive = true;
                             connectionDetails.ai = ConnectionOption.CONNECTED;
@@ -311,7 +309,7 @@ namespace BadgerControlModule.Services
 
             ReleaseControl releaseControl = new ReleaseControl();
             releaseControl.SetDestination(destinationAddress);
-            releaseControl.SetSource(component.JausAddress);
+            //releaseControl.SetSource(component.JausAddress);
             Transport.SendMessage(releaseControl);
         }
 
