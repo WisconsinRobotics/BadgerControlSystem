@@ -23,7 +23,7 @@
                         <RowDefinition Height="2*"/>
                     </Grid.RowDefinitions>
 
-                    <ItemsControl x:Name="ConnectionRegion" prism:RegionManager.RegionName="BadgerControlConnectionView" Grid.Row="0"/>
+                    <ItemsControl x:Name="ConnectionRegion" prism:RegionManager.RegionName="BadgerControlConnectionView" Grid.Row="0" Grid.Column="0"/>
                     <ItemsControl x:Name="RobotsInfoRegion" prism:RegionManager.RegionName="BadgerRobotsInformationView" Grid.Row="1" Grid.Column="0"/>
                     <ItemsControl x:Name="DiscoveryRegion" prism:RegionManager.RegionName="BadgerControlDiscoveryView" Grid.Row="2" Grid.Column="0"/>
                 </Grid>
@@ -36,8 +36,8 @@
                         <RowDefinition Height="3*"/>
                     </Grid.RowDefinitions>
 
-                    <ItemsControl x:Name="StatusRegion" prism:RegionManager.RegionName="BadgerControlStatusView" Grid.Row="0"/>
-                    <ItemsControl x:Name="LoggerRegion" prism:RegionManager.RegionName="BadgerControlLoggerView" Grid.Row="1" VerticalAlignment="Top"/>
+                    <ItemsControl x:Name="StatusRegion" prism:RegionManager.RegionName="BadgerControlStatusView" Grid.Row="0" Grid.Column="1"/>
+                    <ItemsControl x:Name="LoggerRegion" prism:RegionManager.RegionName="BadgerControlLoggerView" Grid.Row="1" Grid.Column="1" VerticalAlignment="Top"/>
                 </Grid>
 
             </Grid>
