@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.IO;
 
-using Microsoft.Practices.Prism.Events;
-using Microsoft.Practices.Prism.PubSubEvents;
+using Prism.Events;
 
 using BadgerJaus.Services;
 using BadgerJaus.Services.Core;

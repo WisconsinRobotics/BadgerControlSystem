@@ -1,23 +1,12 @@
-﻿using System;
+﻿
 using System.Net;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
-using Microsoft.Practices.Prism.Events;
-using Microsoft.Practices.Prism.PubSubEvents;
+using Prism.Events;
 
 using BadgerJaus.Util;
-using BadgerJaus.Messages.Control;
 using BadgerJaus.Services.Core;
-using BadgerJaus.Services;
 
 using BadgerControlModule.Services;
-using BadgerControlModule.Utils;
-
-using JoystickLibrary;
 
 namespace BadgerControlModule.Models
 {
@@ -78,7 +67,11 @@ namespace BadgerControlModule.Models
             guiNode.AddComponent(guiComponent);
             guiComponent.AddService(guiService);
             guiComponent.ComponentState = ComponentState.STATE_READY;
-
+            /*
+            UdpClient udpSocket = new UdpClient(Subsystem.JAUS_PORT);
+            ConcurrentDictionary<long, IPEndPoint> jausAddrMap = new ConcurrentDictionary<long, IPEndPoint>();
+            Transport transportService = Transport.CreateTransportInstance(udpSocket, jausAddrMap);
+            */
             // start execute loop
             InitializeTimer();
         }
