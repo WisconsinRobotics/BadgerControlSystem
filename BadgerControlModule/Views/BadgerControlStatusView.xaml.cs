@@ -62,8 +62,8 @@ namespace BadgerControlModule.Views
                 return;
             }
 
-            headingBox.Text = joystickQueryThread.Angle.ToString();
-            velocityBox.Text = joystickQueryThread.Velocity.ToString();
+            headingBox.Text = joystickQueryThread.XVelocity.ToString();
+            velocityBox.Text = joystickQueryThread.YVelocity.ToString();
         }
 
         // Don't worry guys, I write clean code! 

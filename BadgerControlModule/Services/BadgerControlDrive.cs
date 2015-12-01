@@ -196,10 +196,10 @@ namespace BadgerControlModule.Services
             msg.SetSource(component.JausAddress);
 
             // convert joystick degrees into radians
-            msg.SetHeading(joystickQueryThread.Angle * (Math.PI / 180));
+            msg.SetHeading(joystickQueryThread.XVelocity * (Math.PI / 180));
 
             //adding 100 to fit into defined setLocalVector MAX_SPEED & MIN_SPEED
-            msg.SetSpeed(joystickQueryThread.Velocity + 100);
+            msg.SetSpeed(joystickQueryThread.YVelocity + 100);
             
             Transport.SendMessage(msg);
         }

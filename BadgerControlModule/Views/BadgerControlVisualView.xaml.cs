@@ -47,8 +47,8 @@ namespace BadgerControlModule.Views
                 return;
             }
 
-            angle = joystickQueryThread.Angle;
-            velocity = joystickQueryThread.Velocity;
+            angle = joystickQueryThread.XVelocity;
+            velocity = joystickQueryThread.YVelocity;
 
             /* JOYSTICK BOUNDS:
              *  velocity ~ [-100, 100]
