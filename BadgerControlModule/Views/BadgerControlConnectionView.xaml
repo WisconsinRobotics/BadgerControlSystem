@@ -21,17 +21,17 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        <Label Content="Robot" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="42" Grid.Row="0" Grid.Column="0"/>
+        <Label Content="Robot" HorizontalAlignment="Center" VerticalAlignment="Center" Height="26" Width="42" Grid.Row="0" Grid.Column="0"/>
 
         <Button Content="Connect" 
                 Command="{Binding Connect}"
                 HorizontalAlignment="Left" Width="75" Height="25" Grid.Column ="1" Grid.Row="3"/>
         <Button Content="Abort" 
                 Command="{Binding Abort}"
-                HorizontalAlignment="Left" Width="75" Height="25" Grid.Column="0" Grid.Row="3"/>
+                HorizontalAlignment="Center" Width="75" Height="25" Grid.Column="0" Grid.Row="3"/>
 
-        <Label Content="IP" HorizontalAlignment="Left" Height="30" Grid.Column="0" Grid.Row="1"/>
-        <Label Content="Subsystem" HorizontalAlignment="Left" Height="30" Grid.Row="2" Width="67"/>
+        <Label Content="IP" HorizontalAlignment="Center" Height="30" Grid.Column="0" Grid.Row="1"/>
+        <Label Content="Subsystem" HorizontalAlignment="Center" Height="30" Grid.Row="2" Width="67"/>
 
         <TextBox Name="IP_Textbox" 
                  HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Width="120" Grid.Column="2" Grid.Row="1"

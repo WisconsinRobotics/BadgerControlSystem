@@ -8,27 +8,39 @@
              Background="White">
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5*"/>
             <ColumnDefinition Width="4*"/>
-            <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="2*"/>
-        </Grid.RowDefinitions>
+        <Grid Grid.Column="0" ShowGridLines="True">
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
+            
+            <Label Content="Robot's Information" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="119" Grid.Row="0" Grid.Column="0"/>
+            <ComboBox HorizontalAlignment="Center"  Width="152" Height="22" Grid.Row="0" Grid.Column="0" Margin="0,25,0,0" VerticalAlignment="Top"/>
+         </Grid>
+        <Grid Grid.Column="1">
 
-        <Label Content="Robot's Information" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="119" Grid.Row="0" Grid.Column="0"/>
-        <ComboBox HorizontalAlignment="Center"  VerticalAlignment="Center" Width="152" Height="22" Grid.Row="0" Grid.Column="0"/>
-
-        <TreeView Name="TreeView1" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="0" Width ="120" Grid.Column="1">
-            <TreeViewItem Header="Header">
-                <TreeViewItem Header="Subheader 1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="3*"/>
+            </Grid.RowDefinitions>
+            
+            <TreeView Name="TreeView1" HorizontalAlignment="Left" VerticalAlignment="Top" Width ="120" Grid.Row="0" Grid.Column="1">
+                <TreeViewItem Header="Header">
+                    <TreeViewItem Header="Subheader 1">
+                    </TreeViewItem>
+                    <TreeViewItem Header="Subheader 2">
+                    </TreeViewItem>
+                    <TreeViewItem Header="Subheader 3">
+                    </TreeViewItem>
                 </TreeViewItem>
-                <TreeViewItem Header="Subheader 2">
-                </TreeViewItem>
-            </TreeViewItem>
+            </TreeView>
+        </Grid>
 
-        </TreeView>
         <!-- put shit into the grids to make everything neat and resizeable -->
     </Grid>
 </UserControl>

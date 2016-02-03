@@ -18,7 +18,7 @@
         </Grid.RowDefinitions>
 
         <Label Content="Discovery" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="119" Grid.Row="0" Grid.Column="0"/>
-        <Button Content="Send Discovery" HorizontalAlignment="Right" Margin="20,51,0,0" VerticalAlignment="Top" Width="109" Grid.Row="0" Grid.Column="0" Height="24"/>
+        <Button Content="Send Discovery" HorizontalAlignment="Right"  VerticalAlignment="Bottom" Width="109" Grid.Row="0" Grid.Column="0" Height="24"/>
 
     </Grid>
 
