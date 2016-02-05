@@ -8,21 +8,27 @@ namespace BadgerControlModule.ViewModels
 {
     class BadgerControlLoggerViewModel : BindableBase
     {
-        private String logText;
+        private string logText;
         protected readonly IEventAggregator _eventAggregator;
 
         public BadgerControlLoggerViewModel(IEventAggregator eventAggregator)
         {
-            logText = "Welcome to the Badger Control GUI!";
-
+            logText = GetTimeStamp(DateTime.Now) + "Welcome to the Badger Control GUI!";
+           
             this._eventAggregator = eventAggregator;
             this._eventAggregator.GetEvent<LoggerEvent>().Subscribe((text) =>                      
             {
-                this.LogText = text;
+                String timeStamp = GetTimeStamp(DateTime.Now);
+                this.LogText = timeStamp + text;
             });
         }
 
-        public String LogText
+        public string GetTimeStamp(DateTime value)
+        {
+            return value.ToString("[HH:mm:ss dd/MM] ");
+        }
+
+        public string LogText
         {
             get 
             { 
@@ -30,7 +36,7 @@ namespace BadgerControlModule.ViewModels
             }
             set 
             { 
-                SetProperty(ref this.logText, value + "\n" + this.logText);
+                SetProperty(ref this.logText, this.logText + "\n" + value);
             }
         }
     }
