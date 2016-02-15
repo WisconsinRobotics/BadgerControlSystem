@@ -139,7 +139,7 @@ namespace BadgerControlModule.Services
             {
                 // shut down all active components
                 Shutdown shutdown = new Shutdown();
-                int subsys = CurrentDestinationAddress.getSubsystem();
+                int subsys = CurrentDestinationAddress.SubsystemID;
                 int node = CurrentDestinationAddress.getNode();
                 JausAddress newAddress = new JausAddress(subsys, node, 1);
                 QueryStatus queryStatus = new QueryStatus();

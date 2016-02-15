@@ -20,7 +20,7 @@
             </Grid.RowDefinitions>
             
             <Label Content="Robot's Information" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="119" Grid.Row="0" Grid.Column="0"/>
-            <ComboBox HorizontalAlignment="Center"  Width="152" Height="22" Grid.Row="0" Grid.Column="0" Margin="0,25,0,0" VerticalAlignment="Top"/>
+            <ComboBox HorizontalAlignment="Center"  Width="152" Height="22" Grid.Row="0" Grid.Column="0" Margin="0,25,0,0" VerticalAlignment="Top" ItemsSource="{Binding SubsystemList}" SelectedItem="{Binding SelectedSubsystem}"/>
          </Grid>
         <Grid Grid.Column="1">
 

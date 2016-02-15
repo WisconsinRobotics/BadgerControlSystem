@@ -1,27 +1,54 @@
-﻿
+﻿/*
+ * Copyright (c) 2015, Wisconsin Robotics
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ * * Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.
+ * * Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in the
+ *   documentation and/or other materials provided with the distribution.
+ * * Neither the name of Wisconsin Robotics nor the
+ *   names of its contributors may be used to endorse or promote products
+ *   derived from this software without specific prior written permission.
+ *   
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL WISCONSIN ROBOTICS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+using System.Collections;
 using System.Net;
 
 using Prism.Events;
 
+using BadgerJaus.Messages.Discovery;
 using BadgerJaus.Util;
 using BadgerJaus.Services.Core;
 
 using BadgerControlModule.Services;
+using System.Collections.Generic;
 
 namespace BadgerControlModule.Models
 {
-    public class BadgerControlSubsystem : Subsystem
+    public class BadgerControlSubsystem : JausSubsystem
     {
         // Local constants for the JAUS GUI
         private const int GUI_SUBSYSTEM_ID = 0;
-        private const int GUI_ROBOT_NODE_ID = 1;
+        private const int GUI_NODE_ID = 1;
         private const int GUI_COMPONENT_ID = 1;
 
         // Remote JAUS constants
         private const int REMOTE_NODE_ID = 1;
 
         // Remote JAUS variables
-        private string currentIP;
         private int currentRemoteSubsystemID = 0;
         private int currentRemoteComponent = 0;
 
@@ -30,17 +57,34 @@ namespace BadgerControlModule.Models
         private Component guiComponent;
         private BadgerControlDrive guiService;
 
+        JausAddress localJausAddress;
+
         // Event handler
         protected readonly IEventAggregator _eventAggregator;
 
-        public BadgerControlSubsystem() : base(GUI_SUBSYSTEM_ID)
+        protected static BadgerControlSubsystem badgerControlSubsystemInstance;
+
+        public static BadgerControlSubsystem CreateInstance()
+        {
+            if (badgerControlSubsystemInstance == null)
+                badgerControlSubsystemInstance = new BadgerControlSubsystem();
+
+            return badgerControlSubsystemInstance;
+        }
+
+        public static BadgerControlSubsystem GetInstance()
+        {
+            return badgerControlSubsystemInstance;
+        }
+
+        private BadgerControlSubsystem() : base(GUI_SUBSYSTEM_ID, "BadgerControlSubsystem")
         {
             // setup event listeners
             #region EVENT_LISTENERS
             _eventAggregator = ApplicationService.Instance.EventAggregator;
             _eventAggregator.GetEvent<UpdateIPEvent>().Subscribe((ip) =>
             {
-                CurrentRemoteIP = ip;
+                //CurrentRemoteIP = ip;
             });
             _eventAggregator.GetEvent<UpdateSubsystemIdEvent>().Subscribe((subsystem) =>
             {
@@ -51,6 +95,9 @@ namespace BadgerControlModule.Models
                 CurrentDriveComponent = drive;
             });
             #endregion
+
+            localJausAddress = new JausAddress(GUI_SUBSYSTEM_ID, GUI_NODE_ID, GUI_COMPONENT_ID);
+            badgerControlSubsystemInstance = this;
         }
 
         public void InitializeComponents()
@@ -59,7 +106,7 @@ namespace BadgerControlModule.Models
             guiService = new BadgerControlDrive();
             guiService.Enabled = true;
 
-            guiNode = new Node(GUI_ROBOT_NODE_ID);
+            guiNode = new Node(GUI_NODE_ID);
             guiComponent = new Component(GUI_COMPONENT_ID);
 
             // create subsystem-node-component hierarchy
@@ -89,36 +136,6 @@ namespace BadgerControlModule.Models
             }
         }
 
-        public string CurrentRemoteIP
-        {
-            get { return currentIP; }
-            set 
-            {
-                IPAddress ip = null;      
-
-                if (IPAddress.TryParse(value, out ip) == false)
-                {
-                    _eventAggregator.GetEvent<LoggerEvent>().Publish("Please fill in a valid IP Address.");
-                }
-                else
-                {
-                    if (value != currentIP)
-                    {
-                        currentIP = value;
-                        _eventAggregator.GetEvent<LoggerEvent>().Publish("Remote IP Address has been updated.");
-                    }
-                    if (currentRemoteSubsystemID > 0 && currentRemoteComponent > 0)
-                    {
-                        Connect(ip);
-                    }
-                    else if (currentRemoteComponent <= 0)
-                    {
-                         _eventAggregator.GetEvent<LoggerEvent>().Publish("Please set a remote drive component.");
-                    }
-                }
-            }
-        }
-
         public int CurrentRemoteSubsystemID
         {
             get { return currentRemoteSubsystemID; }
@@ -139,28 +156,22 @@ namespace BadgerControlModule.Models
             }
         }
 
-        private void Connect(IPAddress ip)
+        public void Connect(int remoteSubsystemID, IPEndPoint remoteAddress)
         {
-            // add a new destination address - this will begin the main body of the excecute loop in the main service
-            guiService.CurrentDestinationAddress = new JausAddress(currentRemoteSubsystemID, REMOTE_NODE_ID, (int)currentRemoteComponent);
-            long jausAddressValue = guiService.CurrentDestinationAddress.Value;
+            Subsystem remoteSubsystem = new Subsystem(remoteSubsystemID, remoteAddress);
+            discoveryService.AddRemoteSubsystem(remoteSubsystemID, remoteSubsystem);
+            JausAddress remoteJausAddress = new JausAddress(remoteSubsystemID, 255, 255);
+            QueryIdentification queryIdentification = new QueryIdentification();
+            queryIdentification.SetDestination(remoteJausAddress);
+            queryIdentification.SetSource(localJausAddress);
+            Transport.SendMessage(queryIdentification);
 
-            // if there was some sort of error with the JAUS address
-            if (guiService.CurrentDestinationAddress == null)
-            {
-                guiService.CurrentDestinationAddress = null;
-                _eventAggregator.GetEvent<LoggerEvent>().Publish("Error: null JausAddress string");
-            }
+            _eventAggregator.GetEvent<LoggerEvent>().Publish("Attempting to connect...");
+        }
 
-            // else, we have all the info we need so attempt to connect
-            else
-            {
-                IPEndPoint ipEndpoint = new IPEndPoint(ip, Subsystem.JAUS_PORT);
-                Transport transportService = Transport.GetTransportService();
-                transportService.AddRemoteAddress(jausAddressValue, ipEndpoint);
-                _eventAggregator.GetEvent<LoggerEvent>().Publish("Attempting to connect...");
-            }
+        public IEnumerable<Subsystem> DiscoveredSubsystems
+        {
+            get { return discoveryService.DiscoveredSubsystems.Values; }
         }
     }
 }
-

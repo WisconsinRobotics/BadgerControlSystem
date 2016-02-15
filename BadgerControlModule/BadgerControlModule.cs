@@ -18,7 +18,7 @@ namespace BadgerControlModule
         public BadgerControlModule(RegionManager regionManager)
         {
             this.regionManager = regionManager;
-            subsystem = new BadgerControlSubsystem();
+            subsystem = BadgerControlSubsystem.CreateInstance();
             subsystem.InitializeComponents();
         }
 

@@ -38,6 +38,6 @@
                  Text="{Binding IP, UpdateSourceTrigger=PropertyChanged}"/>
         <TextBox Name="Subsystem_Textbox" 
                  HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Width="120" Grid.Column="2" Grid.Row="2"
-                 Text="{Binding Subsystem, UpdateSourceTrigger=PropertyChanged}"/>
+                 Text="{Binding SubsystemID, UpdateSourceTrigger=PropertyChanged}"/>
     </Grid>
 </UserControl>
