@@ -26,7 +26,6 @@
                     
                     <ItemsControl x:Name="ConnectionRegion" prism:RegionManager.RegionName="BadgerControlConnectionView" Grid.Row="0" Grid.Column="0"/>
                     <ItemsControl x:Name="RobotsInfoRegion" prism:RegionManager.RegionName="BadgerRobotsInformationView" Grid.Row="1" Grid.Column="0"/>
-                    <ItemsControl x:Name="DiscoveryRegion" prism:RegionManager.RegionName="BadgerControlDiscoveryView" Grid.Row="2" Grid.Column="0"/>
                 </Grid>
 
                 <!-- This is the right column of the main window -->
@@ -38,6 +37,7 @@
                         <RowDefinition Height="3*"/>
                     </Grid.RowDefinitions>
 
+                    <ItemsControl x:Name="DiscoveryRegion" prism:RegionManager.RegionName="BadgerControlDiscoveryView" Grid.Row="0" Grid.Column="1"/>
                     <ItemsControl x:Name="LoggerRegion" prism:RegionManager.RegionName="BadgerControlLoggerView" Grid.Row="1" Grid.Column="1" VerticalAlignment="Top"/>
                 
                 </Grid>
