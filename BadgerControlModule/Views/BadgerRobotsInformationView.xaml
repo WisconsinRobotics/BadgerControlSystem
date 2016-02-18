@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:badgerjausutil="clr-namespace:BadgerJaus.Util;assembly=BadgerJaus" 
+             xmlns:badgerjausservice="clr-namespace:BadgerJaus.Services;assembly=BadgerJaus" 
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="400"
              Background="White">
@@ -39,11 +41,11 @@
                     <ColumnDefinition Width="42*"/>
                 </Grid.ColumnDefinitions>
 
-                <Button x:Name="Refresh" Content="Refresh" Grid.Row="0" Margin="0,10,0,5" VerticalAlignment="Center"  HorizontalAlignment="Left" Width="50" Height="22"/>
-                <Button x:Name="Off" Content="Off" Grid.Row="1" Grid.Column="0" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="50" Height="22"/>
-                <Button x:Name="On" Content="On" Grid.Row="1" Grid.Column="1" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="50" Height="22"/>
-                <Button x:Name="ReleaseControl" Content="Release Control" Grid.Row="2" Grid.Column="1" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="90" Height="22"/>
-                <Button x:Name="SendComponent" Content="Send Control" Grid.Row="2" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="75" Height="22"/>
+                <Button x:Name="Refresh" Content="Refresh" Command="{Binding Refresh}" Grid.Row="0" Margin="0,10,0,5" VerticalAlignment="Center"  HorizontalAlignment="Left" Width="50" Height="22"/>
+                <Button x:Name="Activate" Content="Activate" Command="{Binding Activate}" Grid.Row="1" Grid.Column="0" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="65" Height="22"/>
+                <Button x:Name="Deactivate" Content="Deactivate" Command="{Binding Deactivate}" Grid.Row="1" Grid.Column="1" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="65" Height="22"/>
+                <Button x:Name="ReleaseControl" Content="Release Control" Command="{Binding ReleaseControl}" Grid.Row="2" Grid.Column="1" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="90" Height="22"/>
+                <Button x:Name="RequestControl" Content="Request Control" Command="{Binding RequestControl}" Grid.Row="2" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="75" Height="22"/>
 
             </Grid>
         </Grid>
@@ -56,15 +58,24 @@
                 <RowDefinition Height="3*"/>
             </Grid.RowDefinitions>
 
-            <TreeView Name="TreeView1" HorizontalAlignment="Left" VerticalAlignment="Top" Width ="120" Grid.Row="0" Grid.Column="1">
-                <TreeViewItem Header="Header">
-                    <TreeViewItem Header="Subheader 1">
-                    </TreeViewItem>
-                    <TreeViewItem Header="Subheader 2">
-                    </TreeViewItem>
-                    <TreeViewItem Header="Subheader 3">
-                    </TreeViewItem>
-                </TreeViewItem>
+            <TreeView Name="SubsystemTreeView" HorizontalAlignment="Left" VerticalAlignment="Top" Width ="120" Grid.Row="0" Grid.Column="1" ItemsSource="{Binding CurrentNodes}" SelectedItemChanged="{Binding SelectedNodeComponentChanged}">
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate DataType="{x:Type badgerjausutil:Node}" ItemsSource="{Binding ComponentList}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding NodeID}" />
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                    <HierarchicalDataTemplate DataType="{x:Type badgerjausutil:Component}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding ComponentID}" />
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                    <DataTemplate DataType="{x:Type badgerjausservice:DiscoveredService}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding ServiceID}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </TreeView.Resources>
             </TreeView>
         </Grid>
 

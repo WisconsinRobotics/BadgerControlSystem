@@ -45,6 +45,8 @@ namespace BadgerControlModule.Models
         private const int GUI_NODE_ID = 1;
         private const int GUI_COMPONENT_ID = 1;
 
+        public const int AUTHORITY_LEVEL = 254;
+
         // Remote JAUS constants
         private const int REMOTE_NODE_ID = 1;
 
@@ -121,6 +123,11 @@ namespace BadgerControlModule.Models
             */
             // start execute loop
             InitializeTimer();
+        }
+
+        public JausAddress LocalAddress
+        {
+            get { return localJausAddress; }
         }
 
         public int CurrentDriveComponent

@@ -15,8 +15,6 @@ namespace BadgerControlModule.Views
         public BadgerRobotsInformationView()
         {
             InitializeComponent();
-            viewModel = new BadgerRobotsInformationViewModel(ApplicationService.Instance.EventAggregator);
-            DataContext = viewModel;
         }
     }
 }
