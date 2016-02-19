@@ -170,7 +170,7 @@ namespace BadgerControlModule.ViewModels
             return targetAddress;
         }
 
-        private void SelectedNodeComponentChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<object> e)
+        public void SelectedNodeComponentChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<object> e)
         {
             selectedComponent = e.NewValue as Component;
             if(selectedComponent != null)

@@ -10,11 +10,18 @@ namespace BadgerControlModule.Views
     /// </summary>
     public partial class BadgerRobotsInformationView : UserControl
     {
-        private static BadgerRobotsInformationViewModel viewModel;
-
         public BadgerRobotsInformationView()
         {
             InitializeComponent();
+        }
+
+        private void SubsystemTreeView_SelectedItemChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<object> e)
+        {
+            BadgerRobotsInformationViewModel viewModel = DataContext as BadgerRobotsInformationViewModel;
+            if (viewModel == null)
+                return;
+
+            viewModel.SelectedNodeComponentChanged(sender, e);
         }
     }
 }

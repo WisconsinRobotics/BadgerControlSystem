@@ -58,7 +58,8 @@
                 <RowDefinition Height="3*"/>
             </Grid.RowDefinitions>
 
-            <TreeView Name="SubsystemTreeView" HorizontalAlignment="Left" VerticalAlignment="Top" Width ="120" Grid.Row="0" Grid.Column="1" ItemsSource="{Binding CurrentNodes}" SelectedItemChanged="{Binding SelectedNodeComponentChanged}">
+            <TreeView Name="SubsystemTreeView" HorizontalAlignment="Left" VerticalAlignment="Top" Width ="120" Grid.Row="0" Grid.Column="1" ItemsSource="{Binding CurrentNodes}" SelectedItemChanged="SubsystemTreeView_SelectedItemChanged">
+                <!--SelectedItemChanged="{Binding SelectedNodeComponentChanged}"-->
                 <TreeView.Resources>
                     <HierarchicalDataTemplate DataType="{x:Type badgerjausutil:Node}" ItemsSource="{Binding ComponentList}">
                         <StackPanel Orientation="Horizontal">
