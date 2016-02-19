@@ -21,7 +21,7 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        <Label Content="Robot" HorizontalAlignment="Center" VerticalAlignment="Center" Height="26" Width="42" Grid.Row="0" Grid.Column="0"/>
+        <Label Content="Robot" HorizontalAlignment="Left" VerticalAlignment="Center" Height="26" Width="42" Grid.Row="0" Grid.Column="0"/>
 
         <Button Content="Connect" 
                 Command="{Binding Connect}"

@@ -46,7 +46,7 @@ namespace BadgerControlModule.ViewModels
 
         public IEnumerable<Node> CurrentNodes
         {
-            get { return selectedSubsystem.NodeList; }
+            get { return selectedSubsystem.NodeList.Values; }
         }
 
         public ICommand Refresh
