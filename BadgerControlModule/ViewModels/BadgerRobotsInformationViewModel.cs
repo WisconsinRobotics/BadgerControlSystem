@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 
 using Prism.Mvvm;
@@ -20,7 +22,8 @@ namespace BadgerControlModule.ViewModels
         BadgerControlSubsystem badgerControlSubsystem;
         Subsystem selectedSubsystem;
         Node selectedNode;
-        Component selectedComponent;
+        BadgerJaus.Util.Component selectedComponent;
+        ObservableCollection<Subsystem> discoveredSubsystems;
 
         public BadgerRobotsInformationViewModel(IEventAggregator eventAggregator)
         {
@@ -31,11 +34,27 @@ namespace BadgerControlModule.ViewModels
             Deactivate = new DelegateCommand<object>(OnDeactivate);
             RequestControl = new DelegateCommand<object>(OnRequestControl);
             ReleaseControl = new DelegateCommand<object>(OnReleaseControl);
+            discoveredSubsystems = badgerControlSubsystem.DiscoveredSubsystems;
+            discoveredSubsystems.CollectionChanged += DiscoveredSubsystemsUpdated;
         }
 
-        public IEnumerable<Subsystem> SubsystemList
+        private void DiscoveredSubsystemsUpdated(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            get { return badgerControlSubsystem.DiscoveredSubsystems; }
+            Application.Current.Dispatcher.Invoke(new System.Action(() =>
+            {
+                SubsystemList = null;
+                SubsystemList = badgerControlSubsystem.DiscoveredSubsystems;
+            }
+            ));
+        }
+
+        public ObservableCollection<Subsystem> SubsystemList
+        {
+            get { return discoveredSubsystems; }
+            private set
+            {
+                SetProperty<ObservableCollection<Subsystem>>(ref discoveredSubsystems, value);
+            }
         }
 
         public Subsystem SelectedSubsystem
@@ -46,7 +65,12 @@ namespace BadgerControlModule.ViewModels
 
         public IEnumerable<Node> CurrentNodes
         {
-            get { return selectedSubsystem.NodeList.Values; }
+            get
+            {
+                if (selectedSubsystem != null)
+                    return selectedSubsystem.NodeList;
+                return null;
+            }
         }
 
         public ICommand Refresh
@@ -81,6 +105,8 @@ namespace BadgerControlModule.ViewModels
 
         public void OnRefresh(object arg)
         {
+            SubsystemList = badgerControlSubsystem.DiscoveredSubsystems;
+            /*
             JausAddress targetAddress = GenerateCurrentAddress();
 
             if (targetAddress == null)
@@ -91,6 +117,7 @@ namespace BadgerControlModule.ViewModels
             queryStatus.SetDestination(targetAddress);
 
             Transport.SendMessage(queryStatus);
+            */
         }
         
         public void OnRequestControl(object arg)

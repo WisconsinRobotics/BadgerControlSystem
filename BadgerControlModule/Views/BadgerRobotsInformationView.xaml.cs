@@ -13,6 +13,8 @@ namespace BadgerControlModule.Views
         public BadgerRobotsInformationView()
         {
             InitializeComponent();
+            BadgerRobotsInformationViewModel viewModel = new BadgerRobotsInformationViewModel(ApplicationService.Instance.EventAggregator);
+            DataContext = viewModel;
         }
 
         private void SubsystemTreeView_SelectedItemChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<object> e)

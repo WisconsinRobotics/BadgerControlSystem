@@ -24,7 +24,7 @@
             </Grid.RowDefinitions>
 
             <Label Content="Robot's Information" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="119" Grid.Row="0" Grid.Column="0"/>
-            <ComboBox HorizontalAlignment="Center"  Width="152" Height="22" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" ItemsSource="{Binding SubsystemList}" SelectedItem="{Binding SelectedSubsystem}"/>
+            <ComboBox HorizontalAlignment="Center"  Width="152" Height="22" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" ItemsSource="{Binding SubsystemList, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Identification" SelectedItem="{Binding SelectedSubsystem}"/>
 
             <!--Button layout -->
             <Grid Grid.Column="0" Grid.Row="2">

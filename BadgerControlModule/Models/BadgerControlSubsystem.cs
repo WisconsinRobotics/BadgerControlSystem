@@ -24,7 +24,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-using System.Collections;
+using System.Collections.ObjectModel;
 using System.Net;
 
 using Prism.Events;
@@ -116,11 +116,7 @@ namespace BadgerControlModule.Models
             guiNode.AddComponent(guiComponent);
             guiComponent.AddService(guiService);
             guiComponent.ComponentState = ComponentState.STATE_READY;
-            /*
-            UdpClient udpSocket = new UdpClient(Subsystem.JAUS_PORT);
-            ConcurrentDictionary<long, IPEndPoint> jausAddrMap = new ConcurrentDictionary<long, IPEndPoint>();
-            Transport transportService = Transport.CreateTransportInstance(udpSocket, jausAddrMap);
-            */
+
             // start execute loop
             InitializeTimer();
         }
@@ -138,7 +134,7 @@ namespace BadgerControlModule.Models
                 if (value != currentRemoteComponent)
                 {
                     guiService.ResetConnection();
-                    currentRemoteComponent = value; 
+                    currentRemoteComponent = value;
                 }
             }
         }
@@ -166,6 +162,7 @@ namespace BadgerControlModule.Models
         public void Connect(int remoteSubsystemID, IPEndPoint remoteAddress)
         {
             Subsystem remoteSubsystem = new Subsystem(remoteSubsystemID, remoteAddress);
+            remoteSubsystem.Identification = "UnknownSubsystem";
             discoveryService.AddRemoteSubsystem(remoteSubsystemID, remoteSubsystem);
             JausAddress remoteJausAddress = new JausAddress(remoteSubsystemID, 255, 255);
             QueryIdentification queryIdentification = new QueryIdentification();
@@ -176,9 +173,9 @@ namespace BadgerControlModule.Models
             _eventAggregator.GetEvent<LoggerEvent>().Publish("Attempting to connect...");
         }
 
-        public IEnumerable<Subsystem> DiscoveredSubsystems
+        public ObservableCollection<Subsystem> DiscoveredSubsystems
         {
-            get { return discoveryService.DiscoveredSubsystems.Values; }
+            get { return discoveryService.ObservableDiscoveredSubsystems; }
         }
     }
 }

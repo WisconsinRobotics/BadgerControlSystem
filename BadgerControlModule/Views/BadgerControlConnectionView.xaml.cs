@@ -28,10 +28,5 @@ namespace BadgerControlModule.Views
             BadgerControlConnectionViewModel viewModel = new BadgerControlConnectionViewModel(ApplicationService.Instance.EventAggregator);
             DataContext = viewModel;
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
