@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 using Prism.Mvvm;
 using Prism.Commands;
 using Prism.Events;
 
+using BadgerControlModule.Models;
 using BadgerControlModule.Services;
 using BadgerControlModule.Utils;
 
@@ -14,6 +16,9 @@ namespace BadgerControlModule.ViewModels
         private DriveModeOption driveMode;
         private String driveModeString;
         protected readonly IEventAggregator _eventAggregator;
+        private List<string> driveServices;
+
+        BadgerControlSubsystem badgerControlSubsystem;
 
         public BadgerControlDriveViewModel(IEventAggregator eventAggregator)
         {
@@ -21,6 +26,8 @@ namespace BadgerControlModule.ViewModels
             this._eventAggregator = eventAggregator;
             driveMode = DriveModeOption.REMOTE;
             driveModeString = "Remote";
+            driveServices = new List<string>();
+            badgerControlSubsystem = BadgerControlSubsystem.GetInstance();
         }
 
         public ICommand Confirm
@@ -58,6 +65,11 @@ namespace BadgerControlModule.ViewModels
                         break;
                 }
             }
+        }
+
+        public List<string> DriveServices
+        {
+            get { return driveServices; }
         }
     }
 }

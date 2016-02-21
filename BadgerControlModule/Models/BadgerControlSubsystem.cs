@@ -24,17 +24,20 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
+ using System.Collections.ObjectModel;
 using System.Net;
 
 using Prism.Events;
 
 using BadgerJaus.Messages.Discovery;
 using BadgerJaus.Util;
+using BadgerJaus.Services;
 using BadgerJaus.Services.Core;
+using BadgerJaus.Services.Mobility;
 
 using BadgerControlModule.Services;
-using System.Collections.Generic;
+using BadgerControlModule.Utils;
 
 namespace BadgerControlModule.Models
 {
@@ -60,6 +63,10 @@ namespace BadgerControlModule.Models
         private BadgerControlDrive guiService;
 
         JausAddress localJausAddress;
+
+        RemoteVelocityStateDriverService remoteVelocityStateDriverService;
+
+        Dictionary<long, DriveModes> discoveredDriveModes;
 
         // Event handler
         protected readonly IEventAggregator _eventAggregator;
@@ -100,6 +107,8 @@ namespace BadgerControlModule.Models
 
             localJausAddress = new JausAddress(GUI_SUBSYSTEM_ID, GUI_NODE_ID, GUI_COMPONENT_ID);
             badgerControlSubsystemInstance = this;
+            remoteVelocityStateDriverService = new RemoteVelocityStateDriverService();
+            discoveredDriveModes = new Dictionary<long, DriveModes>();
         }
 
         public void InitializeComponents()
@@ -176,6 +185,33 @@ namespace BadgerControlModule.Models
         public ObservableCollection<Subsystem> DiscoveredSubsystems
         {
             get { return discoveryService.ObservableDiscoveredSubsystems; }
+        }
+
+        public void UpdateDriveModes()
+        {
+            foreach(Subsystem subsystem in DiscoveredSubsystems)
+            {
+                foreach(Node node in subsystem.NodeList)
+                {
+                    foreach(Component component in node.ComponentList)
+                    {
+                        foreach(BaseService service in component.Services)
+                        {
+                            switch(service.ServiceName)
+                            {
+                                case LocalVectorDriver.SERVICE_NAME:
+                                    break;
+                                case VelocityStateDriver.SERVICE_NAME:
+                                    if (discoveredDriveModes.ContainsKey(component.JausAddress.Value))
+                                        break;
+                                    DriveModes driveMode = new DriveModes(this, component, remoteVelocityStateDriverService);
+                                    discoveredDriveModes.Add(component.JausAddress.Value, driveMode);
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
