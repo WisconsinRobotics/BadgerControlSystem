@@ -3,6 +3,8 @@ using System.Windows.Controls;
 using BadgerControlModule.ViewModels;
 using BadgerControlModule.Services;
 
+using BadgerJaus.Util;
+
 namespace BadgerControlModule.Views
 {
     /// <summary>
@@ -24,6 +26,22 @@ namespace BadgerControlModule.Views
                 return;
 
             viewModel.SelectedNodeComponentChanged(sender, e);
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            BadgerRobotsInformationViewModel viewModel = DataContext as BadgerRobotsInformationViewModel;
+            if (viewModel == null)
+                return;
+
+            viewModel.SubsystemSelected(sender, e);
+
+            //SubsystemTreeView.ItemsSource = viewModel.CurrentNodes;
+            SubsystemTreeView.Items.Clear();
+            foreach(Node node in viewModel.CurrentNodes)
+            {
+                SubsystemTreeView.Items.Add(node);
+            }
         }
     }
 }

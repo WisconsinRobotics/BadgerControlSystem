@@ -24,7 +24,7 @@
             </Grid.RowDefinitions>
 
             <Label Content="Robot's Information" HorizontalAlignment="Left" VerticalAlignment="Top" Height="26" Width="119" Grid.Row="0" Grid.Column="0"/>
-            <ComboBox HorizontalAlignment="Center"  Width="152" Height="22" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" ItemsSource="{Binding SubsystemList, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Identification" SelectedItem="{Binding SelectedSubsystem}"/>
+            <ComboBox HorizontalAlignment="Center"  Width="152" Height="22" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" ItemsSource="{Binding SubsystemList, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Identification" SelectionChanged="ComboBox_SelectionChanged"  SelectedItem="{Binding SelectedSubsystem}"/>
 
             <!--Button layout -->
             <Grid Grid.Column="0" Grid.Row="2">
@@ -58,22 +58,21 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <TreeView Name="SubsystemTreeView" HorizontalAlignment="Left" VerticalAlignment="Top" Width ="120" Grid.Row="0" Grid.Column="1" ItemsSource="{Binding CurrentNodes}" SelectedItemChanged="SubsystemTreeView_SelectedItemChanged">
-                <!--SelectedItemChanged="{Binding SelectedNodeComponentChanged}"-->
+            <TreeView Name="SubsystemTreeView" HorizontalAlignment="Left" VerticalAlignment="Top" Width ="168" Grid.Row="0" SelectedItemChanged="SubsystemTreeView_SelectedItemChanged" Height="234" Grid.RowSpan="2">
                 <TreeView.Resources>
                     <HierarchicalDataTemplate DataType="{x:Type badgerjausutil:Node}" ItemsSource="{Binding ComponentList}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding NodeID}" />
                         </StackPanel>
                     </HierarchicalDataTemplate>
-                    <HierarchicalDataTemplate DataType="{x:Type badgerjausutil:Component}">
+                    <HierarchicalDataTemplate DataType="{x:Type badgerjausutil:Component}" ItemsSource="{Binding Services}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding ComponentID}" />
                         </StackPanel>
                     </HierarchicalDataTemplate>
                     <DataTemplate DataType="{x:Type badgerjausservice:DiscoveredService}">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding ServiceID}" />
+                            <TextBlock Text="{Binding}" />
                         </StackPanel>
                     </DataTemplate>
                 </TreeView.Resources>
