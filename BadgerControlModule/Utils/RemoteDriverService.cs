@@ -8,7 +8,7 @@ using BadgerJaus.Util;
 
 namespace BadgerControlModule.Utils
 {
-    interface RemoteDriverService
+    public interface RemoteDriverService
     {
         void SendDriveCommand(long xJoystickValue, long yJoystickValue, long zJoystickValue, Component parentComponent);
     }

@@ -67,6 +67,7 @@ namespace BadgerControlModule.Models
         RemoteVelocityStateDriverService remoteVelocityStateDriverService;
 
         Dictionary<long, DriveModes> discoveredDriveModes;
+        ObservableCollection<DriveModes> observableDriveModes;
 
         // Event handler
         protected readonly IEventAggregator _eventAggregator;
@@ -109,6 +110,7 @@ namespace BadgerControlModule.Models
             badgerControlSubsystemInstance = this;
             remoteVelocityStateDriverService = new RemoteVelocityStateDriverService();
             discoveredDriveModes = new Dictionary<long, DriveModes>();
+            observableDriveModes = new ObservableCollection<DriveModes>();
         }
 
         public void InitializeComponents()
@@ -126,8 +128,39 @@ namespace BadgerControlModule.Models
             guiComponent.AddService(guiService);
             guiComponent.ComponentState = ComponentState.STATE_READY;
 
+            discoveryService.ObservableDiscoveredSubsystems.CollectionChanged += SubsystemListModified;
+
             // start execute loop
             InitializeTimer();
+        }
+
+        private void SubsystemListModified(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            foreach(Subsystem subsystem in e.NewItems)
+            {
+                subsystem.ObservableNodes.CollectionChanged += NodesUpdated;
+            }
+        }
+
+        private void NodesUpdated(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            foreach(Node node in e.NewItems)
+            {
+                node.ObservableComponents.CollectionChanged += ComponentsUpdated;
+            }
+        }
+
+        private void ComponentsUpdated(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            foreach(Component component in e.NewItems)
+            {
+                component.Services.CollectionChanged += ServicesUpdated;
+            }
+        }
+
+        private void ServicesUpdated(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            UpdateDriveModes();
         }
 
         public JausAddress LocalAddress
@@ -187,9 +220,15 @@ namespace BadgerControlModule.Models
             get { return discoveryService.ObservableDiscoveredSubsystems; }
         }
 
+        public ObservableCollection<DriveModes> ObservableDriveModes
+        {
+            get { return observableDriveModes; }
+        }
+
         public void UpdateDriveModes()
         {
-            foreach(Subsystem subsystem in DiscoveredSubsystems)
+            DriveModes driveMode;
+            foreach (Subsystem subsystem in DiscoveredSubsystems)
             {
                 foreach(Node node in subsystem.NodeList)
                 {
@@ -200,12 +239,16 @@ namespace BadgerControlModule.Models
                             switch(service.ServiceName)
                             {
                                 case LocalVectorDriver.SERVICE_NAME:
+                                    driveMode = new DriveModes(this, component, remoteVelocityStateDriverService, LocalVectorDriver.SERVICE_NAME);
+                                    discoveredDriveModes.Add(component.JausAddress.Value, driveMode);
+                                    observableDriveModes.Add(driveMode);
                                     break;
                                 case VelocityStateDriver.SERVICE_NAME:
                                     if (discoveredDriveModes.ContainsKey(component.JausAddress.Value))
                                         break;
-                                    DriveModes driveMode = new DriveModes(this, component, remoteVelocityStateDriverService);
+                                    driveMode = new DriveModes(this, component, remoteVelocityStateDriverService, VelocityStateDriver.SERVICE_NAME);
                                     discoveredDriveModes.Add(component.JausAddress.Value, driveMode);
+                                    observableDriveModes.Add(driveMode);
                                     break;
                             }
                         }

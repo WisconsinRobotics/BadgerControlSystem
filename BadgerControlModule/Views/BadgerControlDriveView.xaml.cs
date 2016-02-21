@@ -26,8 +26,8 @@ namespace BadgerControlModule.Views
         {
             InitializeComponent();
             DriveModeComboBox.SelectedIndex = 0;
-            //BadgerControlDriveViewModel viewModel = new BadgerControlDriveViewModel(ApplicationService.Instance.EventAggregator);
-            //DataContext = viewModel;
+            BadgerControlDriveViewModel viewModel = new BadgerControlDriveViewModel(ApplicationService.Instance.EventAggregator);
+            DataContext = viewModel;
         }
     }
 }

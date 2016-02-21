@@ -19,8 +19,8 @@
         </Grid.RowDefinitions>
 
         <ComboBox x:Name="DriveModeComboBox" HorizontalAlignment="Left" VerticalAlignment="Center" Width="120" 
-                  ToolTip="Select one..." Grid.Row="1" Grid.Column="1" Text="{Binding DriveMode, Mode=OneWayToSource}" ItemsSource="{Binding DriveServices}" />
-        <!--<Button Content="Confirm" Command="{Binding Confirm}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75" Grid.Column="1" Grid.Row="2" IsCancel="True" VerticalContentAlignment="Center" />-->
+                  ToolTip="Select one..." Grid.Row="1" Grid.Column="1" ItemsSource="{Binding DriveModesList, UpdateSourceTrigger=PropertyChanged}" />
+        <Button Content="Confirm" Command="{Binding Confirm}" HorizontalAlignment="Left" VerticalAlignment="Center" Width="75" Grid.Column="1" Grid.Row="2" IsCancel="True" VerticalContentAlignment="Center" />
         <Label Content="Drive Mode Selection" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0"/>
         <Label Content="Mode" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="1"/>
 
