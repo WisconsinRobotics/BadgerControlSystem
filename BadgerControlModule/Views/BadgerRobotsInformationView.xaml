@@ -27,7 +27,7 @@
             <ComboBox HorizontalAlignment="Center"  Width="152" Height="22" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" ItemsSource="{Binding SubsystemList, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Identification" SelectionChanged="ComboBox_SelectionChanged"  SelectedItem="{Binding SelectedSubsystem}"/>
 
             <!--Button layout -->
-            <Grid Grid.Column="0" Grid.Row="2">
+            <Grid Grid.Column="0" Grid.Row="2" ShowGridLines="True">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="1*"/>
@@ -41,10 +41,10 @@
                     <ColumnDefinition Width="19*"/>
                 </Grid.ColumnDefinitions>
 
-                <Button x:Name="Refresh" Content="Refresh" Command="{Binding Refresh}" Grid.Row="0" Margin="0,8,0,2" VerticalAlignment="Center"  HorizontalAlignment="Left" Width="80" Height="50" FontSize="20"/>
-                <Button x:Name="Activate" Content="Activate" Command="{Binding Activate}" Grid.Row="1" Grid.Column="0" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="80" Height="50" FontSize="18"/>
-                <Button x:Name="Deactivate" Content="Deactivate" Command="{Binding Deactivate}" Grid.Row="1" Grid.Column="1" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="80" Height="50" FontSize="16"/>
-                <Button x:Name="ReleaseControl" Content="Release Control" Command="{Binding ReleaseControl}" Grid.Row="2" Grid.Column="1" Margin="0,5,17,5" VerticalAlignment="Center" Height="50" FontSize="14" Grid.ColumnSpan="2"/>
+                <Button x:Name="Refresh" Content="Refresh" Command="{Binding Refresh}" Grid.Row="0" Margin="0,8,0,2" VerticalAlignment="Center"  HorizontalAlignment="Left" Width="95" Height="50" FontSize="12"/>
+                <Button x:Name="Activate" Content="Activate" Command="{Binding Activate}" Grid.Row="1" Grid.Column="0" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="95" Height="50" FontSize="12"/>
+                <Button x:Name="Deactivate" Content="Deactivate" Command="{Binding Deactivate}" Grid.Row="1" Grid.Column="1" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="95" Height="50" FontSize="12"/>
+                <Button x:Name="ReleaseControl" Content="Release Control" Command="{Binding ReleaseControl}" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Height="50" Width="95" FontSize="12" Grid.ColumnSpan="2"/>
                 <Button x:Name="RequestControl" Content="Request Control" Command="{Binding RequestControl}" Grid.Row="2" Margin="0,5,0,5" VerticalAlignment="Center" HorizontalAlignment="Left" Width="95" Height="50" FontSize="12"/>
 
             </Grid>
@@ -78,7 +78,5 @@
                 </TreeView.Resources>
             </TreeView>
         </Grid>
-
-        <!-- put shit into the grids to make everything neat and resizeable -->
     </Grid>
 </UserControl>

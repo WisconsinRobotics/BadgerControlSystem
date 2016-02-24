@@ -6,7 +6,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="150" d:DesignWidth="300"
              Background="White">
-    <Grid>
+    <Grid ShowGridLines="True">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
@@ -25,10 +25,10 @@
 
         <Button Content="Connect" 
                 Command="{Binding Connect}"
-                HorizontalAlignment="Left" Width="75" Height="25" Grid.Column ="1" Grid.Row="3"/>
+                HorizontalAlignment="Left" Width="75" Height="25" Grid.Column ="1" Grid.Row="3" FontSize="12"/>
         <Button Content="Abort" 
                 Command="{Binding Abort}"
-                HorizontalAlignment="Center" Width="75" Height="25" Grid.Column="0" Grid.Row="3"/>
+                HorizontalAlignment="Center" Width="75" Height="25" Grid.Column="0" Grid.Row="3" FontSize="12"/>
 
         <Label Content="IP" HorizontalAlignment="Center" Height="30" Grid.Column="0" Grid.Row="1"/>
         <Label Content="Subsystem" HorizontalAlignment="Center" Height="30" Grid.Row="2" Width="67"/>

@@ -18,7 +18,7 @@ namespace BadgerControlModule.ViewModels
             this._eventAggregator = eventAggregator;
             this._eventAggregator.GetEvent<LoggerEvent>().Subscribe((text) =>                      
             {
-                String timeStamp = GetTimeStamp(DateTime.Now);
+                string timeStamp = GetTimeStamp(DateTime.Now);
                 this.LogText = timeStamp + text;
             });
         }

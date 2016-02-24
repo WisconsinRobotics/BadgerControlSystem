@@ -68,7 +68,7 @@ namespace BadgerControlModule.Services
 
                 if (JoyStickConfirmed && !joystickMessageGiven)
                 {
-                    _eventAggregator.GetEvent<LoggerEvent>().Publish("Joystick connected.");
+                    _eventAggregator.GetEvent<LoggerEvent>().Publish("Joystick connected.");  
                     joystickMessageGiven = true; // jank hack to fix the duplicate event publishing due to multithreading
                 }
             });
