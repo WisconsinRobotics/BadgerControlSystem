@@ -91,5 +91,11 @@ namespace BadgerControlModule.ViewModels
             //_eventAggregator.GetEvent<UpdateDriveModeEvent>().Publish((int) driveMode);
             badgerControlSubsystem.UpdateDriveModes();
         }
+
+        public DriveModes CurrentDriveMode
+        {
+            get { return badgerControlSubsystem.CurrentDriveMode; }
+            set { badgerControlSubsystem.CurrentDriveMode = value; }
+        }
     }
 }

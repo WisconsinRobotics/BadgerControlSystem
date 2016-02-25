@@ -24,6 +24,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net;
@@ -57,10 +58,17 @@ namespace BadgerControlModule.Models
         private int currentRemoteSubsystemID = 0;
         private int currentRemoteComponent = 0;
 
+        /*
         // Local JAUS objects for the GUI 
         private Node guiNode;
         private Component guiComponent;
         private BadgerControlDrive guiService;
+        */
+
+        Node badgerNode;
+        Component badgerComponent;
+        BadgerControlService badgerControlService;
+        BadgerDriverService badgerDriveService;
 
         JausAddress localJausAddress;
 
@@ -68,6 +76,7 @@ namespace BadgerControlModule.Models
 
         Dictionary<long, DriveModes> discoveredDriveModes;
         ObservableCollection<DriveModes> observableDriveModes;
+        DriveModes currentDriveMode;
 
         // Event handler
         protected readonly IEventAggregator _eventAggregator;
@@ -102,13 +111,13 @@ namespace BadgerControlModule.Models
             });
             _eventAggregator.GetEvent<UpdateDriveModeEvent>().Subscribe((drive) =>
             {
-                CurrentDriveComponent = drive;
+                //CurrentDriveComponent = drive;
             });
             #endregion
 
             localJausAddress = new JausAddress(GUI_SUBSYSTEM_ID, GUI_NODE_ID, GUI_COMPONENT_ID);
             badgerControlSubsystemInstance = this;
-            remoteVelocityStateDriverService = new RemoteVelocityStateDriverService();
+            remoteVelocityStateDriverService = new RemoteVelocityStateDriverService(this);
             discoveredDriveModes = new Dictionary<long, DriveModes>();
             observableDriveModes = new ObservableCollection<DriveModes>();
         }
@@ -116,17 +125,29 @@ namespace BadgerControlModule.Models
         public void InitializeComponents()
         {
             // start BadgerControlDrive
-            guiService = new BadgerControlDrive();
-            guiService.Enabled = true;
+            //guiService = new BadgerControlDrive();
+            //guiService.Enabled = true;
 
-            guiNode = new Node(GUI_NODE_ID);
-            guiComponent = new Component(GUI_COMPONENT_ID);
+            //guiNode = new Node(GUI_NODE_ID);
+            //guiComponent = new Component(GUI_COMPONENT_ID);
 
             // create subsystem-node-component hierarchy
-            this.AddNode(guiNode);
-            guiNode.AddComponent(guiComponent);
-            guiComponent.AddService(guiService);
-            guiComponent.ComponentState = ComponentState.STATE_READY;
+            //this.AddNode(guiNode);
+            //guiNode.AddComponent(guiComponent);
+            //guiComponent.AddService(guiService);
+            //guiComponent.ComponentState = ComponentState.STATE_READY;
+
+
+            badgerNode = new Node(GUI_NODE_ID);
+            badgerComponent = new Component(GUI_COMPONENT_ID);
+            badgerControlService = new BadgerControlService(this);
+            badgerDriveService = new BadgerDriverService(this);
+
+            AddNode(badgerNode);
+            badgerNode.AddComponent(badgerComponent);
+            badgerComponent.AddService(badgerControlService);
+            badgerComponent.AddService(badgerDriveService);
+            badgerComponent.ComponentState = ComponentState.STATE_READY;
 
             discoveryService.ObservableDiscoveredSubsystems.CollectionChanged += SubsystemListModified;
 
@@ -168,6 +189,7 @@ namespace BadgerControlModule.Models
             get { return localJausAddress; }
         }
 
+        /*
         public int CurrentDriveComponent
         {
             get { return currentRemoteComponent; }
@@ -180,6 +202,7 @@ namespace BadgerControlModule.Models
                 }
             }
         }
+        */
 
         public int CurrentRemoteSubsystemID
         {
@@ -220,6 +243,11 @@ namespace BadgerControlModule.Models
             get { return discoveryService.ObservableDiscoveredSubsystems; }
         }
 
+        public ConcurrentDictionary<long, Subsystem> DiscoveredSubsystemsDictionary
+        {
+            get { return discoveryService.DiscoveredSubsystems; }
+        }
+
         public ObservableCollection<DriveModes> ObservableDriveModes
         {
             get { return observableDriveModes; }
@@ -255,6 +283,12 @@ namespace BadgerControlModule.Models
                     }
                 }
             }
+        }
+
+        public DriveModes CurrentDriveMode
+        {
+            get { return currentDriveMode; }
+            set { currentDriveMode = value; }
         }
     }
 }
