@@ -6,7 +6,8 @@
              xmlns:badgerjausutil="clr-namespace:BadgerJaus.Util;assembly=BadgerJaus" 
              xmlns:badgerjausservice="clr-namespace:BadgerJaus.Services;assembly=BadgerJaus" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="400"
+             d:DesignHeight="400
+             " d:DesignWidth="400"
              Background="White">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -14,8 +15,12 @@
             <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
         <!--Left column of window -->
-        <Grid Grid.Column="0" ShowGridLines="True">
+        <Grid Grid.Column="0" Grid.Row="0">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
@@ -51,7 +56,7 @@
         </Grid>
 
         <!--Right column of window -->
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="1" Grid.Row="0">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
@@ -77,6 +82,29 @@
                     </DataTemplate>
                 </TreeView.Resources>
             </TreeView>
+        </Grid>
+
+        <!--Bottom status bar- Controller ID -->
+        <Grid Grid.Column="0" Grid.Row="1">
+        
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            
+            <Button x:Name="label" Content="ControllerID" Grid.Row="0" Margin="10,5,92,0" Width="120" VerticalAlignment="Top"/>
+            <TextBox x:Name="ControllerID" Grid.Row="1"  VerticalAlignment="Top" Height="25" Margin="10,5,92,0" TextWrapping="Wrap" Width="120"/>
+        </Grid>
+
+        <!--Bottom status bar- Node/Component -->
+        <Grid Grid.Column="1" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
+            <Button x:Name="Label" Content="Status" Grid.Row="0" Margin="10,5,0,0" Width="120" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            <TextBox x:Name="NodeComponent" Grid.Row="1"  VerticalAlignment="Top" HorizontalAlignment="Left" Height="25" Margin="10,5,0,0" TextWrapping="Wrap" Width="120"/>
         </Grid>
     </Grid>
 </UserControl>

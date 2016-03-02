@@ -16,8 +16,8 @@
 
                 <!-- This is the left column of the main window -->
                 <Grid Grid.Column="0" ShowGridLines="True">
-                    <!-- Define the subrows of the left column. Note the 3rd row is filler and contains nothing -->
                     
+                    <!-- Define the subrows of the left column. -->
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="2*"/>
@@ -31,7 +31,7 @@
                 <!-- This is the right column of the main window -->
                 <Grid Grid.Column="1" ShowGridLines="True">
                     
-                    <!-- Define the subrows of the right column. Note the 3rd row is filler and contains nothing -->
+                    <!-- Define the subrows of the right column -->
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="3*"/>
@@ -45,7 +45,7 @@
             </Grid>
         </TabItem>
         <TabItem Header="Drive">
-            <!-- Parent Grid -->
+            <!-- Parent Grid of the Drive Tab-->
             <Grid ShowGridLines="True">
 
                 <Grid.ColumnDefinitions>
@@ -57,18 +57,8 @@
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="3*"/>
                 </Grid.RowDefinitions>
-                
-                <Grid Grid.Column="1" ShowGridLines="True" Grid.RowSpan="2">
-                    <!-- Define the subrows of the right column. -->
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="3*"/>
-                    </Grid.RowDefinitions>
 
-                    <ItemsControl x:Name="StatusRegion" prism:RegionManager.RegionName="BadgerControlStatusView" Grid.Row="0" Grid.Column="1"/>
-
-                </Grid>
-               
+                <!-- Define the left side -->
                 <Grid Grid.Column="0" ShowGridLines="True" Grid.RowSpan="2">
                     
                     <Grid.ColumnDefinitions>
@@ -85,6 +75,18 @@
                     <ItemsControl x:Name="VisualRegion" prism:RegionManager.RegionName="BadgerControlVisualView" Grid.Row="2"/>
                     <ItemsControl x:Name="DriveRegion" prism:RegionManager.RegionName="BadgerControlDriveView" Grid.Row="0"/>
                     
+                </Grid>
+
+                <!-- Define the right side -->
+                <Grid Grid.Column="1" ShowGridLines="True" Grid.RowSpan="2">
+                    <!-- Define the subrows of the right column. -->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="3*"/>
+                    </Grid.RowDefinitions>
+
+                    <ItemsControl x:Name="StatusRegion" prism:RegionManager.RegionName="BadgerControlStatusView" Grid.Row="0" Grid.Column="1"/>
+
                 </Grid>
             </Grid>
         </TabItem>
