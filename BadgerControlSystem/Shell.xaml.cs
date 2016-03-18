@@ -26,5 +26,10 @@ namespace BadgerControlSystem
         {
             InitializeComponent();
         }
+
+        private void ShellClosed(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
+        }
     }
 }
