@@ -73,6 +73,7 @@ namespace BadgerControlModule.Models
         JausAddress localJausAddress;
 
         RemoteVelocityStateDriverService remoteVelocityStateDriverService;
+        RemotePrimitiveDriverService remotePrimitiveDriverService;
 
         Dictionary<long, DriveModes> discoveredDriveModes;
         ObservableCollection<DriveModes> observableDriveModes;
@@ -118,6 +119,7 @@ namespace BadgerControlModule.Models
             localJausAddress = new JausAddress(GUI_SUBSYSTEM_ID, GUI_NODE_ID, GUI_COMPONENT_ID);
             badgerControlSubsystemInstance = this;
             remoteVelocityStateDriverService = new RemoteVelocityStateDriverService(this);
+            remotePrimitiveDriverService = new RemotePrimitiveDriverService(this);
             discoveredDriveModes = new Dictionary<long, DriveModes>();
             observableDriveModes = new ObservableCollection<DriveModes>();
         }
@@ -275,6 +277,13 @@ namespace BadgerControlModule.Models
                                     if (discoveredDriveModes.ContainsKey(component.JausAddress.Value))
                                         break;
                                     driveMode = new DriveModes(this, component, remoteVelocityStateDriverService, VelocityStateDriver.SERVICE_NAME);
+                                    discoveredDriveModes.Add(component.JausAddress.Value, driveMode);
+                                    observableDriveModes.Add(driveMode);
+                                    break;
+                                case PrimitiveDriver.SERVICE_NAME:
+                                    if (discoveredDriveModes.ContainsKey(component.JausAddress.Value))
+                                        break;
+                                    driveMode = new DriveModes(this, component, remotePrimitiveDriverService, PrimitiveDriver.SERVICE_NAME);
                                     discoveredDriveModes.Add(component.JausAddress.Value, driveMode);
                                     observableDriveModes.Add(driveMode);
                                     break;

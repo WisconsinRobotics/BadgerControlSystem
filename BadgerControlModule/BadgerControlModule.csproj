@@ -101,6 +101,7 @@
     <Compile Include="Utils\DriveModeOption.cs" />
     <Compile Include="Utils\DriveModes.cs" />
     <Compile Include="Utils\RemoteDriverService.cs" />
+    <Compile Include="Utils\RemotePrimitiveDriverService.cs" />
     <Compile Include="Utils\RemoteVelocityStateDriverService.cs" />
     <Compile Include="ViewModels\BadgerControlConnectionViewModel.cs" />
     <Compile Include="ViewModels\BadgerControlDiscoveryViewModel.cs" />
