@@ -29,7 +29,7 @@ namespace BadgerControlModule.Utils
 
             setVelocityCommand.VelocityX = xJoystickValue;
             setVelocityCommand.VelocityY = yJoystickValue;
-            //setVelocityCommand.VelocityZ = zJoystickValue;
+            setVelocityCommand.VelocityZ = zJoystickValue;
 
             Transport.SendMessage(setVelocityCommand);
         }

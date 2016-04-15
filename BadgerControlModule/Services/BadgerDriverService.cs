@@ -71,25 +71,40 @@ namespace BadgerControlModule.Services
         protected override void Execute(Component component)
         {
             long xVelocity, yVelocity, zRotation;
-            int leftSpeed, rightSpeed;
-            int speedIndex;
+            bool[] buttons;
 
             if (joystickQuery == null)
             {
                 joystickQuery = new JoystickQueryThread();
-                Thread joystickThread = new Thread(joystickQuery.QueryJoystick);
-                joystickThread.Start();
+                joystickQuery.Start();
             }
 
-            xVelocity = joystickQuery.XVelocity;
-            yVelocity = joystickQuery.YVelocity;
-            zRotation = joystickQuery.ZRotation;
+            List<int> ids = joystickQuery.GetJoystickIDs();
+            if (ids.Count == 0)
+                return;
+
+            int joystickID = ids[0];
+
+            // should check for correctness!
+            joystickQuery.GetButtons(joystickID, out buttons);
+            joystickQuery.GetXVelocity(joystickID, out xVelocity);
+            joystickQuery.GetYVelocity(joystickID, out yVelocity);
+            joystickQuery.GetZRotation(joystickID, out zRotation);
 
             if ((prevXVelocity == xVelocity) && (prevYVelocity == yVelocity))
                 return;
 
             prevXVelocity = xVelocity;
             prevYVelocity = yVelocity;
+
+            // TODO: FIX ME
+            // temporary stopgap for e-stop
+            if (buttons[0])
+            {
+                xVelocity = 0;
+                yVelocity = 0;
+                zRotation = 0;
+            }
 
             if (badgerControlSubsystem.CurrentDriveMode != null)
                 badgerControlSubsystem.CurrentDriveMode.SendDriveCommand(xVelocity, yVelocity, zRotation);
