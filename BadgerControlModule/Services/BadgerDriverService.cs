@@ -72,6 +72,8 @@ namespace BadgerControlModule.Services
         {
             long xVelocity, yVelocity, zRotation;
             bool[] buttons;
+            int primaryJoystickID = JoystickQueryThread.PRIMARY_JOYSTICK_UNASSIGNED;
+            int secondaryJoystickID = JoystickQueryThread.PRIMARY_JOYSTICK_UNASSIGNED;
 
             if (joystickQuery == null)
             {
@@ -79,17 +81,20 @@ namespace BadgerControlModule.Services
                 joystickQuery.Start();
             }
 
-            List<int> ids = joystickQuery.GetJoystickIDs();
-            if (ids.Count == 0)
+            if (!joystickQuery.PrimaryIDAssigned())
                 return;
 
-            int joystickID = ids[0];
+            if(primaryJoystickID == JoystickQueryThread.PRIMARY_JOYSTICK_UNASSIGNED)
+                primaryJoystickID = joystickQuery.GetPrimaryID();
+
+            if (secondaryJoystickID == JoystickQueryThread.PRIMARY_JOYSTICK_UNASSIGNED)
+                secondaryJoystickID = joystickQuery.GetSecondaryID();
 
             // should check for correctness!
-            joystickQuery.GetButtons(joystickID, out buttons);
-            joystickQuery.GetXVelocity(joystickID, out xVelocity);
-            joystickQuery.GetYVelocity(joystickID, out yVelocity);
-            joystickQuery.GetZRotation(joystickID, out zRotation);
+            joystickQuery.GetButtons(primaryJoystickID, out buttons);
+            joystickQuery.GetXVelocity(primaryJoystickID, out xVelocity);
+            joystickQuery.GetYVelocity(primaryJoystickID, out yVelocity);
+            joystickQuery.GetZRotation(secondaryJoystickID, out zRotation);
 
             if ((prevXVelocity == xVelocity) && (prevYVelocity == yVelocity))
                 return;
@@ -99,7 +104,7 @@ namespace BadgerControlModule.Services
 
             // TODO: FIX ME
             // temporary stopgap for e-stop
-            if (buttons[0])
+            if (buttons[(int)JoystickButton.Button2])
             {
                 xVelocity = 0;
                 yVelocity = 0;
