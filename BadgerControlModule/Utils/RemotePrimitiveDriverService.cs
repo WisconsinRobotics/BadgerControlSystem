@@ -26,7 +26,10 @@ namespace BadgerControlModule.Utils
             SetWrenchEffort setWrenchEffort = new SetWrenchEffort();
             setWrenchEffort.SetSource(badgerControlSubsystem.LocalAddress);
             setWrenchEffort.SetDestination(parentComponent.JausAddress);
+            // This is intentional, do not attempt to swap the X and Y values.
             setWrenchEffort.SetPropulsiveLinearEffortX(yJoystickValue);
+            setWrenchEffort.SetPropulsiveLinearEffortY(xJoystickValue);
+            setWrenchEffort.SetPropulsiveLinearEffortZ(zJoystickValue);
             Transport.SendMessage(setWrenchEffort);
         }
     }
