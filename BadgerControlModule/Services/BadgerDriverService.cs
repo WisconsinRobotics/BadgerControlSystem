@@ -94,17 +94,24 @@ namespace BadgerControlModule.Services
             joystickQuery.GetButtons(primaryJoystickID, out buttons);
             joystickQuery.GetXVelocity(primaryJoystickID, out xVelocity);
             joystickQuery.GetYVelocity(primaryJoystickID, out yVelocity);
-            joystickQuery.GetZRotation(secondaryJoystickID, out zRotation);
+            joystickQuery.GetYVelocity(secondaryJoystickID, out zRotation);
 
-            if ((prevXVelocity == xVelocity) && (prevYVelocity == yVelocity))
-                return;
+            // Disable this check for now
+            //if ((prevXVelocity == xVelocity) && (prevYVelocity == yVelocity))
+            //    return;
 
             prevXVelocity = xVelocity;
             prevYVelocity = yVelocity;
 
+            // HACK for mining competition
+            if(buttons[(int)JoystickButton.Button2])
+            {
+                zRotation = (zRotation & 0xFF) | 0x100;
+            }
+
             // TODO: FIX ME
             // temporary stopgap for e-stop
-            if (buttons[(int)JoystickButton.Button2])
+                if (buttons[(int)JoystickButton.Button2])
             {
                 xVelocity = 0;
                 yVelocity = 0;
