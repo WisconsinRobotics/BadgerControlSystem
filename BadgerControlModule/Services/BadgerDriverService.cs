@@ -24,7 +24,7 @@ namespace BadgerControlModule.Services
 
         JoystickQueryThread joystickQuery;
 
-        long prevXVelocity;
+        long prevZRotation;
         long prevYVelocity;
 
         bool joystickConfirmedFromVisualView;
@@ -70,14 +70,15 @@ namespace BadgerControlModule.Services
 
         protected override void Execute(Component component)
         {
-            long xVelocity, yVelocity, zRotation;
+            long zRotation, yVelocity, secondaryYVelocity, slider;
             bool[] buttons;
             int primaryJoystickID = JoystickQueryThread.PRIMARY_JOYSTICK_UNASSIGNED;
             int secondaryJoystickID = JoystickQueryThread.PRIMARY_JOYSTICK_UNASSIGNED;
+            uint scaledSlider;
 
             if (joystickQuery == null)
             {
-                joystickQuery = new JoystickQueryThread();
+                joystickQuery = new JoystickQueryThread(2);
                 joystickQuery.Start();
             }
 
@@ -92,34 +93,40 @@ namespace BadgerControlModule.Services
 
             // should check for correctness!
             joystickQuery.GetButtons(primaryJoystickID, out buttons);
-            joystickQuery.GetXVelocity(primaryJoystickID, out xVelocity);
+            joystickQuery.GetZRotation(primaryJoystickID, out zRotation);
             joystickQuery.GetYVelocity(primaryJoystickID, out yVelocity);
-            joystickQuery.GetYVelocity(secondaryJoystickID, out zRotation);
+            joystickQuery.GetYVelocity(secondaryJoystickID, out secondaryYVelocity);
+            joystickQuery.GetSlider(primaryJoystickID, out slider);
+
+            scaledSlider = (byte)(100 * (65535.0 - slider) / 65535.0);
 
             // Disable this check for now
             //if ((prevXVelocity == xVelocity) && (prevYVelocity == yVelocity))
             //    return;
 
-            prevXVelocity = xVelocity;
+            prevZRotation = zRotation;
             prevYVelocity = yVelocity;
 
             // HACK for mining competition
-            if(buttons[(int)JoystickButton.Button2])
+            if(buttons[(int)JoystickButton.Button3])
             {
-                zRotation = (zRotation & 0xFF) | 0x100;
+                secondaryYVelocity = (secondaryYVelocity & 0xFF) | (scaledSlider << 8);
             }
 
             // TODO: FIX ME
             // temporary stopgap for e-stop
-                if (buttons[(int)JoystickButton.Button2])
+            if (buttons[(int)JoystickButton.Button2])
             {
-                xVelocity = 0;
-                yVelocity = 0;
                 zRotation = 0;
+                yVelocity = 0;
+                secondaryYVelocity = 0;
             }
 
             if (badgerControlSubsystem.CurrentDriveMode != null)
-                badgerControlSubsystem.CurrentDriveMode.SendDriveCommand(xVelocity, yVelocity, zRotation);
+            {
+                //_eventAggregator.GetEvent<LoggerEvent>().Publish(string.Format("[P] Z: {0} | Y: {1} | [S] Y: {2}", zRotation, yVelocity, secondaryYVelocity));
+                badgerControlSubsystem.CurrentDriveMode.SendDriveCommand(zRotation, yVelocity, secondaryYVelocity);
+            }
         }
 
         public override long SleepTime

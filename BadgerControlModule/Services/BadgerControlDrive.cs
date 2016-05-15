@@ -28,7 +28,6 @@ namespace BadgerControlModule.Services
         bool componentOneActive;
         bool componentTwoActive;
         bool componentThreeActive;
-
         bool joystickConfirmedFromVisualView;
         bool joystickConfirmedFromStatusView;
         bool joystickMessageGiven;
@@ -323,7 +322,7 @@ namespace BadgerControlModule.Services
                 // try to create a joystick
                 try
                 {
-                    joystickQueryThread = new JoystickQueryThread();
+                    joystickQueryThread = new JoystickQueryThread(2);
                     joystickQueryThread.Start();
                 }
                 catch (Exception)

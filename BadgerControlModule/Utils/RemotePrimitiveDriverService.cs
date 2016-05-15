@@ -29,7 +29,9 @@ namespace BadgerControlModule.Utils
             // This is intentional, do not attempt to swap the X and Y values.
             setWrenchEffort.SetPropulsiveLinearEffortX(yJoystickValue);
             setWrenchEffort.SetPropulsiveLinearEffortY(xJoystickValue);
-            setWrenchEffort.SetPropulsiveLinearEffortZ(zJoystickValue);
+            setWrenchEffort.SetPropulsiveLinearEffortZ((sbyte) (zJoystickValue & 0xFF));
+            setWrenchEffort.SetPropulsiveRotationalEffortX(zJoystickValue >> 8);
+
             Transport.SendMessage(setWrenchEffort);
         }
     }

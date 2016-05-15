@@ -35,7 +35,7 @@ namespace BadgerControlModule.ViewModels
                 return logText; 
             }
             set 
-            { 
+            {
                 SetProperty(ref this.logText, this.logText + "\n" + value);
             }
         }
