@@ -93,12 +93,16 @@ namespace BadgerControlModule.Services
 
             // should check for correctness!
             joystickQuery.GetButtons(primaryJoystickID, out buttons);
-            joystickQuery.GetZRotation(primaryJoystickID, out zRotation);
+            joystickQuery.GetZRotation(primaryJoystickID, out zRotation); // HACK: for mining competition
             joystickQuery.GetYVelocity(primaryJoystickID, out yVelocity);
             joystickQuery.GetYVelocity(secondaryJoystickID, out secondaryYVelocity);
             joystickQuery.GetSlider(primaryJoystickID, out slider);
 
+            // HACK for mining competition
             scaledSlider = (byte)(100 * (65535.0 - slider) / 65535.0);
+
+            // HACK for mining competition
+            zRotation = (int) (100 * (zRotation / 180.0));
 
             // Disable this check for now
             //if ((prevXVelocity == xVelocity) && (prevYVelocity == yVelocity))
@@ -124,7 +128,7 @@ namespace BadgerControlModule.Services
 
             if (badgerControlSubsystem.CurrentDriveMode != null)
             {
-                //_eventAggregator.GetEvent<LoggerEvent>().Publish(string.Format("[P] Z: {0} | Y: {1} | [S] Y: {2}", zRotation, yVelocity, secondaryYVelocity));
+                _eventAggregator.GetEvent<LoggerEvent>().Publish(string.Format("[P] Z: {0} | Y: {1} | [S] Y: {2}", zRotation, yVelocity, secondaryYVelocity));
                 badgerControlSubsystem.CurrentDriveMode.SendDriveCommand(zRotation, yVelocity, secondaryYVelocity);
             }
         }
