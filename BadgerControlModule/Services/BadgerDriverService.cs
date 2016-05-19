@@ -16,6 +16,8 @@ using JoystickLibrary;
 using BadgerControlModule.Models;
 using BadgerControlModule.Views;
 
+using BadgerControlModule.Utils;
+
 namespace BadgerControlModule.Services
 {
     class BadgerDriverService : BaseService
@@ -24,7 +26,7 @@ namespace BadgerControlModule.Services
 
         JoystickQueryThread joystickQuery;
 
-        long prevZRotation;
+        long prevXVelocity;
         long prevYVelocity;
 
         bool joystickConfirmedFromVisualView;
@@ -32,6 +34,19 @@ namespace BadgerControlModule.Services
         bool joystickMessageGiven;
 
         BadgerControlSubsystem badgerControlSubsystem;
+
+        double multiplier = 0;
+
+        const double SPEED6 = 1;
+        const double SPEED5 = 5/6;
+        const double SPEED4 = 4/6;
+        const double SPEED3 = 3/6;
+        const double SPEED2 = 2/6;
+        const double SPEED1 = 1/6;
+
+        const long CLAW_SPEED = 30;
+
+        bool wristMode = false;
 
         public BadgerDriverService(BadgerControlSubsystem badgerControlSubsystem)
         {
@@ -70,11 +85,11 @@ namespace BadgerControlModule.Services
 
         protected override void Execute(Component component)
         {
-            long zRotation, yVelocity, secondaryYVelocity, slider;
-            bool[] buttons;
+            long primaryXVelocity, primaryYVelocity, primaryZRotation;
+            long secondaryXVelocity, secondaryYVelocity, secondaryZRotation;
+            bool[] primaryButtons, secondaryButtons;
             int primaryJoystickID = JoystickQueryThread.PRIMARY_JOYSTICK_UNASSIGNED;
             int secondaryJoystickID = JoystickQueryThread.PRIMARY_JOYSTICK_UNASSIGNED;
-            uint scaledSlider;
 
             if (joystickQuery == null)
             {
@@ -87,50 +102,105 @@ namespace BadgerControlModule.Services
 
             if(primaryJoystickID == JoystickQueryThread.PRIMARY_JOYSTICK_UNASSIGNED)
                 primaryJoystickID = joystickQuery.GetPrimaryID();
-
+            
             if (secondaryJoystickID == JoystickQueryThread.PRIMARY_JOYSTICK_UNASSIGNED)
                 secondaryJoystickID = joystickQuery.GetSecondaryID();
 
             // should check for correctness!
-            joystickQuery.GetButtons(primaryJoystickID, out buttons);
-            joystickQuery.GetZRotation(primaryJoystickID, out zRotation); // HACK: for mining competition
-            joystickQuery.GetYVelocity(primaryJoystickID, out yVelocity);
+            joystickQuery.GetButtons(primaryJoystickID, out primaryButtons);
+            joystickQuery.GetXVelocity(primaryJoystickID, out primaryXVelocity);
+            joystickQuery.GetYVelocity(primaryJoystickID, out primaryYVelocity);
+            joystickQuery.GetZRotation(primaryJoystickID, out primaryZRotation);
+
+            joystickQuery.GetButtons(secondaryJoystickID, out secondaryButtons);
+            joystickQuery.GetXVelocity(secondaryJoystickID, out secondaryXVelocity);
             joystickQuery.GetYVelocity(secondaryJoystickID, out secondaryYVelocity);
-            joystickQuery.GetSlider(primaryJoystickID, out slider);
+            joystickQuery.GetZRotation(secondaryJoystickID, out secondaryZRotation);
+            
 
-            // HACK for mining competition
-            scaledSlider = (byte)(100 * (65535.0 - slider) / 65535.0);
-
-            // HACK for mining competition
-            zRotation = (int) (100 * (zRotation / 180.0));
-
-            // Disable this check for now
-            //if ((prevXVelocity == xVelocity) && (prevYVelocity == yVelocity))
-            //    return;
-
-            prevZRotation = zRotation;
-            prevYVelocity = yVelocity;
-
-            // HACK for mining competition
-            if(buttons[(int)JoystickButton.Button3])
+            // FIXME: Check whether this actually works in C#
+            if (badgerControlSubsystem.CurrentDriveMode is RemotePrimitiveDriverService)
             {
-                secondaryYVelocity = (secondaryYVelocity & 0xFF) | (scaledSlider << 8);
+                if (secondaryButtons[(int)JoystickButton.Button7])
+                {
+                    multiplier = SPEED6;
+                    _eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 6");
+                }
+                else if (secondaryButtons[(int)JoystickButton.Button8])
+                {
+                    multiplier = SPEED5;
+                    _eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 5");
+                }
+                else if (secondaryButtons[(int)JoystickButton.Button9])
+                {
+                    multiplier = SPEED4;
+                    _eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 4");
+                }
+                else if (secondaryButtons[(int)JoystickButton.Button10])
+                {
+                    multiplier = SPEED3;
+                    _eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 3");
+                }
+                else if (secondaryButtons[(int)JoystickButton.Button11])
+                {
+                    multiplier = SPEED2;
+                    _eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 2");
+                }
+                else if (secondaryButtons[(int)JoystickButton.Button12])
+                {
+                    multiplier = SPEED1;
+                    _eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 1");
+                }
+
+                primaryXVelocity = (long)(primaryXVelocity * multiplier);
+                primaryYVelocity = (long)(primaryYVelocity * multiplier);
+                primaryZRotation = (long)(primaryZRotation * multiplier);
+                secondaryXVelocity = (long)(secondaryXVelocity * multiplier);
+                secondaryYVelocity = (long)(secondaryYVelocity * multiplier);
+                secondaryZRotation = (long)(secondaryZRotation * multiplier);
+
+
+                if (secondaryButtons[(int)JoystickButton.Button11])
+                {
+                    wristMode = !wristMode;
+                }
+
+                if(wristMode)
+                {
+                    if(primaryButtons[(int)JoystickButton.Button3] || primaryButtons[(int)JoystickButton.Button4])
+                        if (badgerControlSubsystem.CurrentDriveMode != null)
+                            badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand(0, 0, 0, primaryYVelocity, secondaryXVelocity, CLAW_SPEED);
+                    else if (primaryButtons[(int)JoystickButton.Button4])
+                        if (badgerControlSubsystem.CurrentDriveMode != null)
+                            badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand(0, 0, 0, primaryYVelocity, secondaryXVelocity, -CLAW_SPEED);
+                    else
+                        if (badgerControlSubsystem.CurrentDriveMode != null)
+                            badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand(0, 0, 0, primaryYVelocity, secondaryXVelocity, 0);
+                }
+                else
+                {
+                    if (badgerControlSubsystem.CurrentDriveMode != null)
+                        badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand(primaryYVelocity, secondaryYVelocity, primaryZRotation, 0, 0, 0);
+                }
+
+            }
+            else
+            {
+                primaryZRotation = 0;
+
+                // temporary stopgap for e-stop
+                if (primaryButtons[(int)JoystickButton.Button2])
+                {
+                    primaryYVelocity = 0;
+                    secondaryYVelocity = 0;
+                    primaryZRotation = 0;
+                }
+
+                if (badgerControlSubsystem.CurrentDriveMode != null)
+                    badgerControlSubsystem.CurrentDriveMode.SendDriveCommand(secondaryYVelocity, primaryYVelocity, primaryZRotation);
             }
 
-            // TODO: FIX ME
-            // temporary stopgap for e-stop
-            if (buttons[(int)JoystickButton.Button2])
-            {
-                zRotation = 0;
-                yVelocity = 0;
-                secondaryYVelocity = 0;
-            }
-
-            if (badgerControlSubsystem.CurrentDriveMode != null)
-            {
-                _eventAggregator.GetEvent<LoggerEvent>().Publish(string.Format("[P] Z: {0} | Y: {1} | [S] Y: {2}", zRotation, yVelocity, secondaryYVelocity));
-                badgerControlSubsystem.CurrentDriveMode.SendDriveCommand(zRotation, yVelocity, secondaryYVelocity);
-            }
+            
         }
 
         public override long SleepTime

@@ -30,6 +30,11 @@ namespace BadgerControlModule.Utils
             remoteDriveService.SendDriveCommand(xJoystickValue, yJoystickValue, zJoystickValue, parentComponent);
         }
 
+        public void SendWrenchCommand(long primaryXJoystickValue, long primaryYJoystickValue, long primaryZJoystickValue, long secondaryXJoystickValue, long secondaryYJoystickValue, long secondaryZJoystickValue)
+        {
+            remoteDriveService.SendWrenchCommand(primaryXJoystickValue, primaryYJoystickValue, primaryZJoystickValue, secondaryXJoystickValue, secondaryYJoystickValue, secondaryZJoystickValue, parentComponent);
+        }
+
         public override string ToString()
         {
             return parentComponent.JausAddress.ToString() + ": " + serviceName;

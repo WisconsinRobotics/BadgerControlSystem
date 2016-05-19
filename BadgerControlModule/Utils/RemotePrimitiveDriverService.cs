@@ -29,9 +29,21 @@ namespace BadgerControlModule.Utils
             // This is intentional, do not attempt to swap the X and Y values.
             setWrenchEffort.SetPropulsiveLinearEffortX(yJoystickValue);
             setWrenchEffort.SetPropulsiveLinearEffortY(xJoystickValue);
-            setWrenchEffort.SetPropulsiveLinearEffortZ((sbyte) (zJoystickValue & 0xFF));
-            setWrenchEffort.SetPropulsiveRotationalEffortX(zJoystickValue >> 8);
+            setWrenchEffort.SetPropulsiveLinearEffortZ(zJoystickValue);
+            Transport.SendMessage(setWrenchEffort);
+        }
 
+        public void SendWrenchCommand(long primaryXJoystickValue, long primaryYJoystickValue, long primaryZJoystickValue, long secondaryXJoystickValue, long secondaryYJoystickValue, long secondaryZJoystickValue, Component parentComponent)
+        {
+            SetWrenchEffort setWrenchEffort = new SetWrenchEffort();
+            setWrenchEffort.SetSource(badgerControlSubsystem.LocalAddress);
+            setWrenchEffort.SetDestination(parentComponent.JausAddress);
+            setWrenchEffort.SetPropulsiveLinearEffortX(primaryXJoystickValue);
+            setWrenchEffort.SetPropulsiveLinearEffortY(primaryYJoystickValue);
+            setWrenchEffort.SetPropulsiveLinearEffortZ(primaryZJoystickValue);
+            setWrenchEffort.SetPropulsiveRotationalEffortX(secondaryXJoystickValue);
+            setWrenchEffort.SetPropulsiveRotationalEffortY(secondaryYJoystickValue);
+            setWrenchEffort.SetPropulsiveRotationalEffortZ(secondaryZJoystickValue);
             Transport.SendMessage(setWrenchEffort);
         }
     }
