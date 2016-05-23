@@ -13,7 +13,7 @@ namespace BadgerControlModule.Utils
     public class DriveModes
     {
         private Component parentComponent;
-        private RemoteDriverService remoteDriveService;
+        public RemoteDriverService remoteDriveService;
         private BadgerControlSubsystem badgerControlSubsystem;
         string serviceName;
 
