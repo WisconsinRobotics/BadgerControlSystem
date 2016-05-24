@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="BadgerControlModule.Views.BadgerControlMapView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="542" d:DesignWidth="500"
+             Background="White">
+    
+    <Canvas Name="GPSCanvas" Margin="2,0,0,0">
+            <Ellipse Name ="InsomniaLocation" Fill="#FF0000" Margin="10,35,0,0" Stroke="Black" Height="10" Width="10" Visibility="Hidden"/>
+            <Ellipse Name ="DestinationLocation" Fill="#0000FF" Margin="10,35,0,0" Stroke="Black" Height="10" Width="10" Visibility="Hidden"/>
+
+        <Label Content="The map will go here"></Label>
+    </Canvas>
+
+</UserControl>
