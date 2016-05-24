@@ -37,6 +37,7 @@ namespace BadgerControlModule.Services
 
         double multiplier = 0;
 
+        double speed = 0;
         const double SPEED6 = 6;
         const double SPEED5 = 5;
         const double SPEED4 = 4;
@@ -91,7 +92,6 @@ namespace BadgerControlModule.Services
             int primaryJoystickID = JoystickQueryThread.PRIMARY_JOYSTICK_UNASSIGNED;
             int secondaryJoystickID = JoystickQueryThread.PRIMARY_JOYSTICK_UNASSIGNED;
 
-            double speed = 0;
             double turntableSpeed = 0;
             double shoulderSpeed = 0;
             double elbowSpeed = 0;
@@ -129,40 +129,40 @@ namespace BadgerControlModule.Services
             RemotePrimitiveDriverService remotePrimitiveDriverService = badgerControlSubsystem.CurrentDriveMode.remoteDriveService as RemotePrimitiveDriverService;
             if (remotePrimitiveDriverService != null)
             {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
-                if (secondaryButtons[(int)JoystickButton.Button7])
+                if (primaryButtons[(int)JoystickButton.Button7])
                 {
                     multiplier = SPEED6;
                     speed = SPEED6;
                     _eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 6");
                 }
-                else if (secondaryButtons[(int)JoystickButton.Button8])
+                else if (primaryButtons[(int)JoystickButton.Button8])
                 {
                     multiplier = SPEED5;
-                    speed = SPEED6;
+                    speed = SPEED5;
                     _eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 5");
                 }
-                else if (secondaryButtons[(int)JoystickButton.Button9])
+                else if (primaryButtons[(int)JoystickButton.Button9])
                 {
                     multiplier = SPEED4;
-                    speed = SPEED6;
+                    speed = SPEED4;
                     _eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 4");
                 }
-                else if (secondaryButtons[(int)JoystickButton.Button10])
+                else if (primaryButtons[(int)JoystickButton.Button10])
                 {
                     multiplier = SPEED3;
-                    speed = SPEED6;
+                    speed = SPEED3;
                     _eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 3");
                 }
-                else if (secondaryButtons[(int)JoystickButton.Button11])
+                else if (primaryButtons[(int)JoystickButton.Button11])
                 {
                     multiplier = SPEED2;
-                    speed = SPEED6;
+                    speed = SPEED2;
                     _eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 2");
                 }
-                else if (secondaryButtons[(int)JoystickButton.Button12])
+                else if (primaryButtons[(int)JoystickButton.Button12])
                 {
                     multiplier = SPEED1;
-                    speed = SPEED6;
+                    speed = SPEED1;
                     _eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 1");
                 }
 
@@ -185,39 +185,48 @@ namespace BadgerControlModule.Services
                     wristMode = !wristMode;
                 }
 
-                if(wristMode)
+                if (wristMode)
                 {
                     if (primaryYVelocity < 0)
                         wristLinearSpeed *= -1;
-                    if (wristRotateSpeed < 0)
+                    if (secondaryXVelocity < 0)
                         wristRotateSpeed *= -1;
 
-                    if(primaryButtons[(int)JoystickButton.Button3] || primaryButtons[(int)JoystickButton.Button4])
+                    if (primaryYVelocity > -20 && primaryYVelocity < 20)
+                        wristLinearSpeed = 0;
+                    if (secondaryXVelocity > -20 && secondaryXVelocity < 20)
+                        wristRotateSpeed = 0;
+
+                    if (primaryButtons[(int)JoystickButton.Button3])
                         if (badgerControlSubsystem.CurrentDriveMode != null)
-                            //badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand(0, 0, 0, primaryYVelocity, secondaryXVelocity, CLAW_SPEED);
                             badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand(0, 0, 0, (long)wristLinearSpeed, (long)wristRotateSpeed, (long)speed);
                     else if (primaryButtons[(int)JoystickButton.Button4])
                         if (badgerControlSubsystem.CurrentDriveMode != null)
-                            //badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand(0, 0, 0, primaryYVelocity, secondaryXVelocity, -CLAW_SPEED);
                             badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand(0, 0, 0, (long)wristLinearSpeed, (long)wristRotateSpeed, (long)-speed);
                     else
                         if (badgerControlSubsystem.CurrentDriveMode != null)
-                            //badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand(0, 0, 0, primaryYVelocity, secondaryXVelocity, 0);
                             badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand(0, 0, 0, (long)wristLinearSpeed, (long)wristRotateSpeed, 0);
                 }
                 else
                 {
-                    if (turntableSpeed < 0)
+                    if (primaryZRotation < 0)
                         turntableSpeed *= -1;
-                    if (shoulderSpeed < 0)
+                    if (primaryYVelocity < 0)
                         shoulderSpeed *= -1;
-                    if (elbowSpeed < 0)
+                    if (secondaryYVelocity < 0)
                         elbowSpeed *= -1;
+                    
+                    if (primaryZRotation > -20 && primaryZRotation < 20)
+                        turntableSpeed = 0;
+                    if (primaryYVelocity > -20 && primaryYVelocity < 20)
+                        shoulderSpeed = 0;
+                    if (secondaryYVelocity > -20 && secondaryYVelocity < 20)
+                        elbowSpeed = 0;
 
                     if (badgerControlSubsystem.CurrentDriveMode != null)
-                        //badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand(primaryYVelocity, secondaryYVelocity, primaryZRotation, 0, 0, 0);
                         badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand((long)turntableSpeed, (long)shoulderSpeed, (long)elbowSpeed, 0, 0, 0);
                 }
+
 
             }
             else
