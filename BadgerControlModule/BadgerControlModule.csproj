@@ -103,6 +103,7 @@
     <Compile Include="Utils\RemoteDriverService.cs" />
     <Compile Include="Utils\RemotePrimitiveDriverService.cs" />
     <Compile Include="Utils\RemoteVelocityStateDriverService.cs" />
+    <Compile Include="ViewModels\BadgerControlMapViewModel.cs" />
     <Compile Include="ViewModels\BadgerControlConnectionViewModel.cs" />
     <Compile Include="ViewModels\BadgerControlDiscoveryViewModel.cs" />
     <Compile Include="ViewModels\BadgerControlDriveViewModel.cs" />
@@ -110,6 +111,9 @@
     <Compile Include="ViewModels\BadgerControlVisualViewModel.cs" />
     <Compile Include="ViewModels\BadgerControlMainViewModel.cs" />
     <Compile Include="ViewModels\BadgerRobotsInformationViewModel.cs" />
+    <Compile Include="Views\BadgerControlMapView.xaml.cs">
+      <DependentUpon>BadgerControlMapView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BadgerControlConnectionView.xaml.cs">
       <DependentUpon>BadgerControlConnectionView.xaml</DependentUpon>
     </Compile>
@@ -137,6 +141,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\BadgerControlMapView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\BadgerControlConnectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -165,6 +173,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="BadgerJaus.dll" />
+    <Content Include="JoystickLibrary.dll" />
+    <Content Include="SlimDX.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
