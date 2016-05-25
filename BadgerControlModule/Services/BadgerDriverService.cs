@@ -180,7 +180,7 @@ namespace BadgerControlModule.Services
                 wristRotateSpeed = speed;
 
 
-                if (secondaryButtons[(int)JoystickButton.Button11])
+                if (secondaryButtons[(int)JoystickButton.Button2])
                 {
                     wristMode = !wristMode;
                 }
@@ -198,14 +198,28 @@ namespace BadgerControlModule.Services
                         wristRotateSpeed = 0;
 
                     if (primaryButtons[(int)JoystickButton.Button3])
+                    {
                         if (badgerControlSubsystem.CurrentDriveMode != null)
+                        {
                             badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand(0, 0, 0, (long)wristLinearSpeed, (long)wristRotateSpeed, (long)speed);
+                        }
+                    }
                     else if (primaryButtons[(int)JoystickButton.Button4])
+                    {
                         if (badgerControlSubsystem.CurrentDriveMode != null)
-                            badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand(0, 0, 0, (long)wristLinearSpeed, (long)wristRotateSpeed, (long)-speed);
+                        {
+                            badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand(0, 0, 0, (long)wristLinearSpeed, (long)wristRotateSpeed, (long)(-1 * speed));
+                        }
+                    }
                     else
+                    {
                         if (badgerControlSubsystem.CurrentDriveMode != null)
+                        {
                             badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand(0, 0, 0, (long)wristLinearSpeed, (long)wristRotateSpeed, 0);
+                        }
+                    }
+
+                    Console.WriteLine("linear = {0}  rotate = {1}", wristLinearSpeed, wristRotateSpeed);
                 }
                 else
                 {
