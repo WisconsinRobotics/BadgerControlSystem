@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
+using System.IO;
 using Prism.Events;
 
 using BadgerJaus.Messages;
@@ -49,15 +49,34 @@ namespace BadgerControlModule.Services
 
         bool wristMode = false;
 
-        public BadgerDriverService(BadgerControlSubsystem badgerControlSubsystem)
+		public Object initSetup;
+		bool joystickDisconnected;
+		int rightJoystickId;
+		int leftJoystickId;
+		bool rotateMode = false;
+		const int ARM_ARRAY_LENGTH = 6;
+		// Rotate button
+		int rotateButtonCount = 0;
+		bool rotateButtonToggled = false;
+		int rotateButtonDebounce = 5;
+
+
+		public BadgerDriverService(BadgerControlSubsystem badgerControlSubsystem)
         {
-            this.badgerControlSubsystem = badgerControlSubsystem;
+
+			rightJoystickId = 0;
+			leftJoystickId = 0;
+
+			initSetup = new Object();
+			joystickDisconnected = false;
+
+			this.badgerControlSubsystem = badgerControlSubsystem;
 
             joystickConfirmedFromVisualView = false;
             joystickConfirmedFromStatusView = false;
             joystickMessageGiven = false;
 
-            _eventAggregator = ApplicationService.Instance.EventAggregator;
+			_eventAggregator = ApplicationService.Instance.EventAggregator;
 
             _eventAggregator.GetEvent<ConfirmJoystickEvent>().Subscribe((confirmationID) =>
             {
@@ -84,185 +103,241 @@ namespace BadgerControlModule.Services
             return false;
         }
 
-        protected override void Execute(Component component)
-        {
-            long primaryXVelocity, primaryYVelocity, primaryZRotation;
-            long secondaryXVelocity, secondaryYVelocity, secondaryZRotation;
-            bool[] primaryButtons, secondaryButtons;
-            int primaryJoystickID = JoystickQueryThread.PRIMARY_JOYSTICK_UNASSIGNED;
-            int secondaryJoystickID = JoystickQueryThread.PRIMARY_JOYSTICK_UNASSIGNED;
-
-            double turntableSpeed = 0;
-            double shoulderSpeed = 0;
-            double elbowSpeed = 0;
-            double wristLinearSpeed = 0;
-            double wristRotateSpeed = 0;
-
-            if (joystickQuery == null)
-            {
-                joystickQuery = new JoystickQueryThread(2);
-                joystickQuery.Start();
-            }
-
-            if (!joystickQuery.PrimaryIDAssigned())
-                return;
-
-            if(primaryJoystickID == JoystickQueryThread.PRIMARY_JOYSTICK_UNASSIGNED)
-                primaryJoystickID = joystickQuery.GetPrimaryID();
-            
-            if (secondaryJoystickID == JoystickQueryThread.PRIMARY_JOYSTICK_UNASSIGNED)
-                secondaryJoystickID = joystickQuery.GetSecondaryID();
-
-            // should check for correctness!
-            joystickQuery.GetButtons(primaryJoystickID, out primaryButtons);
-            joystickQuery.GetXVelocity(primaryJoystickID, out primaryXVelocity);
-            joystickQuery.GetYVelocity(primaryJoystickID, out primaryYVelocity);
-            joystickQuery.GetZRotation(primaryJoystickID, out primaryZRotation);
-
-            joystickQuery.GetButtons(secondaryJoystickID, out secondaryButtons);
-            joystickQuery.GetXVelocity(secondaryJoystickID, out secondaryXVelocity);
-            joystickQuery.GetYVelocity(secondaryJoystickID, out secondaryYVelocity);
-            joystickQuery.GetZRotation(secondaryJoystickID, out secondaryZRotation);
+		protected override void Execute(Component component)
+		{
+			long primaryXVelocity, primaryYVelocity, primaryZRotation;
+			long secondaryXVelocity, secondaryYVelocity, secondaryZRotation;
+			bool[] primaryButtons, secondaryButtons;
+			int primaryJoystickID = JoystickQueryThread.PRIMARY_JOYSTICK_UNASSIGNED;
+			int secondaryJoystickID = JoystickQueryThread.PRIMARY_JOYSTICK_UNASSIGNED;
+			bool success;
+	
+			double turntableSpeed = 0;
+			double shoulderSpeed = 0;
+			double elbowSpeed = 0;
+			double wristLinearSpeed = 0;
+			double clawRotateSpeed = 0;
+			double clawGripSpeed = 0;
 
 
-            // FIXME: Check whether this actually works in C#
-            RemotePrimitiveDriverService remotePrimitiveDriverService = badgerControlSubsystem.CurrentDriveMode.remoteDriveService as RemotePrimitiveDriverService;
-            if (remotePrimitiveDriverService != null)
-            {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
-                if (primaryButtons[(int)JoystickButton.Button7])
-                {
-                    multiplier = SPEED6;
-                    speed = SPEED6;
-                    _eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 6");
-                }
-                else if (primaryButtons[(int)JoystickButton.Button8])
-                {
-                    multiplier = SPEED5;
-                    speed = SPEED5;
-                    _eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 5");
-                }
-                else if (primaryButtons[(int)JoystickButton.Button9])
-                {
-                    multiplier = SPEED4;
-                    speed = SPEED4;
-                    _eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 4");
-                }
-                else if (primaryButtons[(int)JoystickButton.Button10])
-                {
-                    multiplier = SPEED3;
-                    speed = SPEED3;
-                    _eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 3");
-                }
-                else if (primaryButtons[(int)JoystickButton.Button11])
-                {
-                    multiplier = SPEED2;
-                    speed = SPEED2;
-                    _eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 2");
-                }
-                else if (primaryButtons[(int)JoystickButton.Button12])
-                {
-                    multiplier = SPEED1;
-                    speed = SPEED1;
-                    _eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 1");
-                }
+			if (joystickQuery == null)
+			{
+				lock (initSetup) // indetermined behavior when multiple JoystickQueryThreads get created - ensure only one gets created
+				{
+					if (joystickQuery == null)
+					{
+						joystickQuery = new JoystickQueryThread(2);
+						joystickQuery.JoystickDisconnected += OnJoystickDisconnected;
+						Thread joystickThread = new Thread(joystickQuery.QueryJoystick);
+						joystickThread.Start();
+					}
+				}
+			}
 
-                //primaryXVelocity = (long)(primaryXVelocity * multiplier);
-                //primaryYVelocity = (long)(primaryYVelocity * multiplier);
-                //primaryZRotation = (long)(primaryZRotation * multiplier);
-                //secondaryXVelocity = (long)(secondaryXVelocity * multiplier);
-                //secondaryYVelocity = (long)(secondaryYVelocity * multiplier);
-                //secondaryZRotation = (long)(secondaryZRotation * multiplier);
-
-                turntableSpeed = speed;
-                shoulderSpeed = speed;
-                elbowSpeed = speed;
-                wristLinearSpeed = speed;
-                wristRotateSpeed = speed;
+			if (joystickDisconnected)
+			{
+				bool isButtonPressed;
+				List<int> ids = joystickQuery.GetJoystickIDs();
+				foreach (int id in ids)
+				{
+					if (!joystickQuery.GetButton(id, JoystickButton.Trigger, out isButtonPressed))
+						continue;
+					if (isButtonPressed)
+					{
+						joystickDisconnected = false;
+						break;
+					}
+				}
+			}
 
 
-                if (secondaryButtons[(int)JoystickButton.Button2])
-                {
-                    wristMode = !wristMode;
-                }
+			int numJoysticks = 0;
+			if (joystickQuery != null)
+				numJoysticks = joystickQuery.GetJoystickIDs().Count;
 
-                if (wristMode)
-                {
-                    if (primaryYVelocity < 0)
-                        wristLinearSpeed *= -1;
-                    if (secondaryXVelocity < 0)
-                        wristRotateSpeed *= -1;
+			if (numJoysticks == 2)
+			{
 
-                    if (primaryYVelocity > -20 && primaryYVelocity < 20)
-                        wristLinearSpeed = 0;
-                    if (secondaryXVelocity > -20 && secondaryXVelocity < 20)
-                        wristRotateSpeed = 0;
+				if (leftJoystickId == 0 || rightJoystickId == 0)
+				{
+					if (joystickQuery.PrimaryIDAssigned())
+					{
+						rightJoystickId = joystickQuery.GetPrimaryID();
+						leftJoystickId = joystickQuery.GetSecondaryID();
+					}
+				}
 
-                    if (primaryButtons[(int)JoystickButton.Button3])
-                    {
-                        if (badgerControlSubsystem.CurrentDriveMode != null)
-                        {
-                            badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand(0, 0, 0, (long)wristLinearSpeed, (long)wristRotateSpeed, (long)speed);
-                        }
-                    }
-                    else if (primaryButtons[(int)JoystickButton.Button4])
-                    {
-                        if (badgerControlSubsystem.CurrentDriveMode != null)
-                        {
-                            badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand(0, 0, 0, (long)wristLinearSpeed, (long)wristRotateSpeed, (long)(-1 * speed));
-                        }
-                    }
-                    else
-                    {
-                        if (badgerControlSubsystem.CurrentDriveMode != null)
-                        {
-                            badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand(0, 0, 0, (long)wristLinearSpeed, (long)wristRotateSpeed, 0);
-                        }
-                    }
+				success = true;
+				success &= joystickQuery.GetButtons(rightJoystickId, out primaryButtons);
+				success &= joystickQuery.GetButtons(leftJoystickId, out secondaryButtons);
 
-                    Console.WriteLine("linear = {0}  rotate = {1}", wristLinearSpeed, wristRotateSpeed);
-                }
-                else
-                {
-                    if (primaryZRotation < 0)
-                        turntableSpeed *= -1;
-                    if (primaryYVelocity < 0)
-                        shoulderSpeed *= -1;
-                    if (secondaryYVelocity < 0)
-                        elbowSpeed *= -1;
-                    
-                    if (primaryZRotation > -20 && primaryZRotation < 20)
-                        turntableSpeed = 0;
-                    if (primaryYVelocity > -20 && primaryYVelocity < 20)
-                        shoulderSpeed = 0;
-                    if (secondaryYVelocity > -20 && secondaryYVelocity < 20)
-                        elbowSpeed = 0;
+				success &= joystickQuery.GetXVelocity(rightJoystickId, out primaryXVelocity);
+				success &= joystickQuery.GetYVelocity(rightJoystickId, out primaryYVelocity);
+				success &= joystickQuery.GetZRotation(rightJoystickId, out primaryZRotation);
 
-                    if (badgerControlSubsystem.CurrentDriveMode != null)
-                        badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand((long)turntableSpeed, (long)shoulderSpeed, (long)elbowSpeed, 0, 0, 0);
-                }
+				success &= joystickQuery.GetXVelocity(leftJoystickId, out secondaryXVelocity);
+				success &= joystickQuery.GetYVelocity(leftJoystickId, out secondaryYVelocity);
+				success &= joystickQuery.GetZRotation(leftJoystickId, out secondaryZRotation);
+
+				if (!success)
+				{
+					return;
+				}
+
+				RemotePrimitiveDriverService remotePimitiveDriverService = badgerControlSubsystem.CurrentDriveMode.remoteDriveService as RemotePrimitiveDriverService;
+				if (remotePimitiveDriverService != null)
+				{
+					// SendWrenchCommand(long primaryXJoystickValue, long primaryYJoystickValue, long primaryZJoystickValue, long secondaryXJoystickValue, long secondaryYJoystickValue, long secondaryZJoystickValue, Component parentComponent);
+					// sign gives direction, value gives magnitude (speed) -> [turntable, shoulder, elbow, wrist, claw rotation, claw grip]
+
+					// Get speed
+					if (primaryButtons[(int)JoystickButton.Button7])
+					{
+						multiplier = SPEED6;
+						speed = SPEED6;
+						_eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 6");
+					}
+					else if (primaryButtons[(int)JoystickButton.Button8])
+					{
+						multiplier = SPEED5;
+						speed = SPEED5;
+						_eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 5");
+					}
+					else if (primaryButtons[(int)JoystickButton.Button9])
+					{
+						multiplier = SPEED4;
+						speed = SPEED4;
+						_eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 4");
+					}
+					else if (primaryButtons[(int)JoystickButton.Button10])
+					{
+						multiplier = SPEED3;
+						speed = SPEED3;
+						_eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 3");
+					}
+					else if (primaryButtons[(int)JoystickButton.Button11])
+					{
+						multiplier = SPEED2;
+						speed = SPEED2;
+						_eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 2");
+					}
+					else if (primaryButtons[(int)JoystickButton.Button12])
+					{
+						multiplier = SPEED1;
+						speed = SPEED1;
+						_eventAggregator.GetEvent<LoggerEvent>().Publish("Speed = 1");
+					}
+					
+
+					// Rotate or Non Rotate Mode
+					if (secondaryButtons[(int)JoystickButton.Button2])
+					{
+						if (++rotateButtonCount == rotateButtonDebounce)
+						{
+							rotateMode = !rotateMode;
+							if (rotateMode)
+								_eventAggregator.GetEvent<LoggerEvent>().Publish("Rotate Mode");
+							else
+								_eventAggregator.GetEvent<LoggerEvent>().Publish("Non Rotate Mode");
+						}
+					}
+					else
+					{
+						rotateButtonCount = 0;
+						rotateButtonToggled = false;
+					}
 
 
-            }
-            else
-            {
-                primaryZRotation = 0;
+					// Turntable [0] and claw rotate [4]
+					if (rotateMode)
+					{
+						// Claw rotation
+						if (primaryButtons[(int)JoystickButton.Button4])
+							clawRotateSpeed = -1 * speed;
+						else if (primaryButtons[(int)JoystickButton.Button3])
+							clawRotateSpeed = speed;
+						else
+							clawRotateSpeed = 0;
 
-                // temporary stopgap for e-stop
-                if (primaryButtons[(int)JoystickButton.Button2])
-                {
-                    primaryYVelocity = 0;
-                    secondaryYVelocity = 0;
-                    primaryZRotation = 0;
-                }
+						// Turntable
+						if (secondaryButtons[(int)JoystickButton.Button4])
+							turntableSpeed = -1 * speed;
+						else if (secondaryButtons[(int)JoystickButton.Button3])
+							turntableSpeed = speed;
+						else
+							turntableSpeed = 0;
 
-                if (badgerControlSubsystem.CurrentDriveMode != null)
-                    badgerControlSubsystem.CurrentDriveMode.SendDriveCommand(secondaryYVelocity, primaryYVelocity, primaryZRotation);
-            }
+						// All others
+						shoulderSpeed = 0;
+						elbowSpeed = 0;
+						wristLinearSpeed = 0;
+						clawGripSpeed = 0;
+					}
+					// Shoulder [1], elbow [2], wrist [3], claw grip [5]
+					else
+					{
+						// Elbow
+						if (primaryButtons[(int)JoystickButton.Button5])
+							elbowSpeed = -1 * speed;
+						else if (primaryButtons[(int)JoystickButton.Button3])
+							elbowSpeed = speed;
+						else
+							elbowSpeed = 0;
 
-            
-        }
+						// Shoulder
+						if (secondaryButtons[(int)JoystickButton.Button5])
+							shoulderSpeed = -1 * speed;
+						else if (secondaryButtons[(int)JoystickButton.Button3])
+							shoulderSpeed = speed;
+						else
+							shoulderSpeed = 0;
 
-        public override long SleepTime
+						// Wrist
+						if (secondaryButtons[(int)JoystickButton.Button6])
+							wristLinearSpeed = -1 * speed;
+						else if (secondaryButtons[(int)JoystickButton.Button4])
+							wristLinearSpeed = speed;
+						else
+							wristLinearSpeed = 0;
+
+						// Claw grip
+						if (primaryButtons[(int)JoystickButton.Button6])
+							clawGripSpeed = -1 * speed;
+						else if (primaryButtons[(int)JoystickButton.Button4])
+							clawGripSpeed = speed;
+						else
+							clawGripSpeed = 0;
+
+						// All others
+						turntableSpeed = 0;
+						clawRotateSpeed = 0;
+					}
+
+					badgerControlSubsystem.CurrentDriveMode.SendWrenchCommand((long)turntableSpeed, (long)shoulderSpeed, (long)elbowSpeed, (long)wristLinearSpeed, (long)clawRotateSpeed, (long)clawGripSpeed);
+				}
+				else
+				{
+					primaryZRotation = 0;
+
+					// temporary stopgap for e-stop
+					if (primaryButtons[(int)JoystickButton.Button2])
+					{
+						primaryYVelocity = 0;
+						secondaryYVelocity = 0;
+						primaryZRotation = 0;
+					}
+
+					if (badgerControlSubsystem.CurrentDriveMode != null)
+						badgerControlSubsystem.CurrentDriveMode.SendDriveCommand(secondaryYVelocity, primaryYVelocity, primaryZRotation);
+				}
+			}
+			else
+			{
+				// ?
+			}
+		}
+
+		public override long SleepTime
         {
             get
             {
@@ -270,7 +345,12 @@ namespace BadgerControlModule.Services
             }
         }
 
-        private bool JoyStickConfirmed
+		private void OnJoystickDisconnected(object sender, EventArgs e)
+		{
+			joystickDisconnected = true;
+		}
+
+		private bool JoyStickConfirmed
         {
             get
             {
