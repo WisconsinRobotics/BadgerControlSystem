@@ -253,17 +253,17 @@ namespace BadgerControlModule.Services
 					{
 						// Claw rotation
 						if (primaryButtons[(int)JoystickButton.Button4])
-							clawRotateSpeed = -1 * speed;
-						else if (primaryButtons[(int)JoystickButton.Button3])
 							clawRotateSpeed = speed;
+						else if (primaryButtons[(int)JoystickButton.Button3])
+							clawRotateSpeed = -1 * speed;
 						else
 							clawRotateSpeed = 0;
 
 						// Turntable
 						if (secondaryButtons[(int)JoystickButton.Button4])
-							turntableSpeed = -1 * speed;
-						else if (secondaryButtons[(int)JoystickButton.Button3])
 							turntableSpeed = speed;
+						else if (secondaryButtons[(int)JoystickButton.Button3])
+							turntableSpeed = -1 * speed;
 						else
 							turntableSpeed = 0;
 
@@ -302,9 +302,9 @@ namespace BadgerControlModule.Services
 
 						// Claw grip
 						if (primaryButtons[(int)JoystickButton.Button6])
-							clawGripSpeed = -1 * speed;
-						else if (primaryButtons[(int)JoystickButton.Button4])
 							clawGripSpeed = speed;
+						else if (primaryButtons[(int)JoystickButton.Button4])
+							clawGripSpeed = -1 * speed;
 						else
 							clawGripSpeed = 0;
 
