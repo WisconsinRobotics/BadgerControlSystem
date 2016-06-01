@@ -35,9 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BadgerRTOSLib.NET">
-      <HintPath>..\BadgerRTOSLib.NET.dll</HintPath>
-    </Reference>
     <Reference Include="JoystickLibrary">
       <HintPath>..\JoystickLibrary.dll</HintPath>
     </Reference>
