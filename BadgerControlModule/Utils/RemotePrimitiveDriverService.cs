@@ -16,6 +16,10 @@ namespace BadgerControlModule.Utils
     {
         BadgerControlSubsystem badgerControlSubsystem;
 
+        public const long QUASI = 5;
+        public const long RELATIVE = 10;
+
+
         public RemotePrimitiveDriverService(BadgerControlSubsystem badgerControlSubsystem)
         {
             this.badgerControlSubsystem = badgerControlSubsystem;
@@ -33,7 +37,7 @@ namespace BadgerControlModule.Utils
             Transport.SendMessage(setWrenchEffort);
         }
 
-        public void SendWrenchCommand(long primaryXJoystickValue, long primaryYJoystickValue, long primaryZJoystickValue, long secondaryXJoystickValue, long secondaryYJoystickValue, long secondaryZJoystickValue, Component parentComponent)
+        public void SendWrenchCommandQuasi(long primaryXJoystickValue, long primaryYJoystickValue, long primaryZJoystickValue, long secondaryXJoystickValue, long secondaryYJoystickValue, long secondaryZJoystickValue, Component parentComponent)
         {
             SetWrenchEffort setWrenchEffort = new SetWrenchEffort();
             setWrenchEffort.SetSource(badgerControlSubsystem.LocalAddress);
@@ -44,6 +48,22 @@ namespace BadgerControlModule.Utils
             setWrenchEffort.SetPropulsiveRotationalEffortX(secondaryXJoystickValue);
             setWrenchEffort.SetPropulsiveRotationalEffortY(secondaryYJoystickValue);
             setWrenchEffort.SetPropulsiveRotationalEffortZ(secondaryZJoystickValue);
+            setWrenchEffort.SetResistiveLinearEffortX(QUASI);
+            Transport.SendMessage(setWrenchEffort);
+        }
+
+        public void SendWrenchCommandRelative(long turntable, long shoulder, long elbow, long wrist, long rotationOfClaw, long claw, Component parentComponent)
+        {
+            SetWrenchEffort setWrenchEffort = new SetWrenchEffort();
+            setWrenchEffort.SetSource(badgerControlSubsystem.LocalAddress);
+            setWrenchEffort.SetDestination(parentComponent.JausAddress);
+            setWrenchEffort.SetPropulsiveLinearEffortX(turntable);
+            setWrenchEffort.SetPropulsiveLinearEffortY(shoulder);
+            setWrenchEffort.SetPropulsiveLinearEffortZ(elbow);
+            setWrenchEffort.SetPropulsiveRotationalEffortX(wrist);
+            setWrenchEffort.SetPropulsiveRotationalEffortY(rotationOfClaw);
+            setWrenchEffort.SetPropulsiveRotationalEffortZ(claw);
+            setWrenchEffort.SetResistiveLinearEffortX(RELATIVE);
             Transport.SendMessage(setWrenchEffort);
         }
     }

@@ -29,6 +29,9 @@ namespace BadgerControlModule.ViewModels
             this._eventAggregator = eventAggregator;
             badgerControlSubsystem = BadgerControlSubsystem.GetInstance();
             port = Subsystem.JAUS_PORT;
+
+            ip = "192.168.0.100";
+            subsystemID = 10;
         }
 
         public ICommand Abort

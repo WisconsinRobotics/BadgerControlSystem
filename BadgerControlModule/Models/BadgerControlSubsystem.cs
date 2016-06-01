@@ -299,5 +299,10 @@ namespace BadgerControlModule.Models
             get { return currentDriveMode; }
             set { currentDriveMode = value; }
         }
+
+        public void SendRelativeArmPosition(ArmJoint joint, int ticks)
+        {
+            badgerDriveService.SendRelativeArmPosition(joint, ticks);
+        }
     }
 }

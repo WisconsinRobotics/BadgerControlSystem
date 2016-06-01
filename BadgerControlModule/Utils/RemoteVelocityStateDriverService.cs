@@ -34,9 +34,16 @@ namespace BadgerControlModule.Utils
             Transport.SendMessage(setVelocityCommand);
         }
 
-        public void SendWrenchCommand(long primaryXJoystickValue, long primaryYJoystickValue, long primaryZJoystickValue, long secondaryXJoystickValue, long secondaryYJoystickValue, long secondaryZJoystickValue, Component parentComponent)
+        public void SendWrenchCommandQuasi(long primaryXJoystickValue, long primaryYJoystickValue, long primaryZJoystickValue, long secondaryXJoystickValue, long secondaryYJoystickValue, long secondaryZJoystickValue, Component parentComponent)
         {
-            throw new NotImplementedException();
+        }
+
+        public void SendWrenchCommandRelative(long turntable, long shoulder, long elbow, long wrist, long rotationOfClaw, long claw, Component parentComponent)
+        {
+        }
+
+        public void SendArmReady(Component parentComponent)
+        {
         }
     }
 }

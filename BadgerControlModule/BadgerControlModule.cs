@@ -32,6 +32,7 @@ namespace BadgerControlModule
             regionManager.RegisterViewWithRegion("BadgerControlDiscoveryView", typeof(Views.BadgerControlDiscoveryView));
             regionManager.RegisterViewWithRegion("BadgerRobotsInformationView", typeof(Views.BadgerRobotsInformationView));
             regionManager.RegisterViewWithRegion("BadgerControlMapView", typeof(Views.BadgerControlMapView));
+            regionManager.RegisterViewWithRegion("BadgerControlArmView", typeof(Views.BadgerControlArmView));
         }
     }
 }

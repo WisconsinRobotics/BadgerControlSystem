@@ -30,9 +30,14 @@ namespace BadgerControlModule.Utils
             remoteDriveService.SendDriveCommand(xJoystickValue, yJoystickValue, zJoystickValue, parentComponent);
         }
 
-        public void SendWrenchCommand(long primaryXJoystickValue, long primaryYJoystickValue, long primaryZJoystickValue, long secondaryXJoystickValue, long secondaryYJoystickValue, long secondaryZJoystickValue)
+        public void SendWrenchCommandRelative(long turntable, long shoulder, long elbow, long wrist, long rotationOfClaw, long claw)
         {
-            remoteDriveService.SendWrenchCommand(primaryXJoystickValue, primaryYJoystickValue, primaryZJoystickValue, secondaryXJoystickValue, secondaryYJoystickValue, secondaryZJoystickValue, parentComponent);
+            remoteDriveService.SendWrenchCommandRelative(turntable, shoulder, elbow, wrist, rotationOfClaw, claw, parentComponent);
+        }
+
+        public void SendWrenchCommandQuasi(long primaryXJoystickValue, long primaryYJoystickValue, long primaryZJoystickValue, long secondaryXJoystickValue, long secondaryYJoystickValue, long secondaryZJoystickValue)
+        {
+            remoteDriveService.SendWrenchCommandQuasi(primaryXJoystickValue, primaryYJoystickValue, primaryZJoystickValue, secondaryXJoystickValue, secondaryYJoystickValue, secondaryZJoystickValue, parentComponent);
         }
 
         public override string ToString()

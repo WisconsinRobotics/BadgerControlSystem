@@ -74,7 +74,8 @@
                     
                     <ItemsControl x:Name="VisualRegion" prism:RegionManager.RegionName="BadgerControlVisualView" Grid.Row="2"/>
                     <ItemsControl x:Name="DriveRegion" prism:RegionManager.RegionName="BadgerControlDriveView" Grid.Row="0"/>
-                    
+                    <ItemsControl x:Name="ArmRegion" prism:RegionManager.RegionName="BadgerControlArmView" Grid.Row="1"/>
+
                 </Grid>
 
                 <!-- Define the right side -->
@@ -86,8 +87,6 @@
                     </Grid.RowDefinitions>
 
                     <ItemsControl x:Name="StatusRegion" prism:RegionManager.RegionName="BadgerControlStatusView" Grid.Row="0" Grid.Column="1"/>
-                    <ItemsControl x:Name="MapRegion" prism:RegionManager.RegionName="BadgerControlMapView" Grid.Row="1" Grid.Column="1" VerticalAlignment="Top"/>
-
                 </Grid>
             </Grid>
         </TabItem>

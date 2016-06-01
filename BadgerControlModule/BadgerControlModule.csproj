@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -98,11 +98,13 @@
     <Compile Include="Services\UpdateDriveModeEvent.cs" />
     <Compile Include="Services\UpdateIPEvent.cs" />
     <Compile Include="Services\UpdateSubsystemIdEvent.cs" />
+    <Compile Include="Utils\ArmJoint.cs" />
     <Compile Include="Utils\DriveModeOption.cs" />
     <Compile Include="Utils\DriveModes.cs" />
     <Compile Include="Utils\RemoteDriverService.cs" />
     <Compile Include="Utils\RemotePrimitiveDriverService.cs" />
     <Compile Include="Utils\RemoteVelocityStateDriverService.cs" />
+    <Compile Include="ViewModels\BadgerControlArmViewModel.cs" />
     <Compile Include="ViewModels\BadgerControlMapViewModel.cs" />
     <Compile Include="ViewModels\BadgerControlConnectionViewModel.cs" />
     <Compile Include="ViewModels\BadgerControlDiscoveryViewModel.cs" />
@@ -111,6 +113,9 @@
     <Compile Include="ViewModels\BadgerControlVisualViewModel.cs" />
     <Compile Include="ViewModels\BadgerControlMainViewModel.cs" />
     <Compile Include="ViewModels\BadgerRobotsInformationViewModel.cs" />
+    <Compile Include="Views\BadgerControlArmView.xaml.cs">
+      <DependentUpon>BadgerControlArmView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BadgerControlMapView.xaml.cs">
       <DependentUpon>BadgerControlMapView.xaml</DependentUpon>
     </Compile>
@@ -141,6 +146,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\BadgerControlArmView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\BadgerControlMapView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -173,6 +182,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="BadgerJaus.dll" />
+    <Content Include="JoystickLibrary.dll" />
+    <Content Include="SlimDX.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
